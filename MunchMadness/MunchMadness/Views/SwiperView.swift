@@ -17,7 +17,7 @@ struct SwiperView: View {
     var body: some View {
         VStack {
             if vm.restaurants.isEmpty {
-                Text("No restaurants found")
+                Text("Loading restaurants...")
             } else {
                 // current restaurant
                 Text("\(vm.restaurants.count)")
@@ -55,7 +55,7 @@ struct SwiperView: View {
             }
         }
         .onAppear {
-            self.vm.getPlaces()
+            vm.getPlaces(with: vm.term, price: vm.price, price2: 2, price3: 3, price4: 4, radius: vm.radius)
         }
     }
     
