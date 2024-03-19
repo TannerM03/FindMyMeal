@@ -10,14 +10,13 @@ import Foundation
 func getRestaurants(latitude: Double, longitude: Double, category: String, limit: Int, term: String, price: Int, price2: Int, price3: Int, price4: Int, radius: Int,
                     completionHandler: @escaping ([RestaurantViewModel]?, Error?) -> Void) {
     
-    let apiKey = "jP1JFTIs5K0_F_LOWNo4F7dGM9tk0LxL2tHw42Cv7wE-aJMmBqAmcWuAe9hMy8LMntqe17rEMTgUE7tSLZgae8_P8jzkMOJNgahnDNxLZWvj-8f9vUBNhTUBAUPqZXYx"
     
     let baseURL = "https://api.yelp.com/v3/businesses/search?latitude=\(latitude)&longitude=\(longitude)&category=\(category)&limit=\(limit)&term=\(term)&price=\(price)&price=\(price2)&price=\(price3)&price=\(price4)&radius=\(radius)"
     
     let endpoint = URL(string: baseURL)
     
     var request = URLRequest(url: endpoint!)
-    request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+    request.setValue("Bearer \(yelpKey)", forHTTPHeaderField: "Authorization")
     request.httpMethod = "GET"
     
     URLSession.shared.dataTask(with: request) { (data, repsonse, error) in
