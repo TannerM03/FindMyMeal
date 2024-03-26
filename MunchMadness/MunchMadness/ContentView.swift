@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selectedTab = "1"
+    
     var body: some View {
         TabView(selection: $selectedTab) {
             HomeView(selectedTab: $selectedTab)
@@ -17,7 +18,7 @@ struct ContentView: View {
                 Text("Home")
             }
                 .tag("1")
-            FilterView()
+            FilterView(locationManager: LocationManager())
                 .tabItem {
                     Label("Filters", systemImage: "menucard.fill")
                 }
