@@ -6,89 +6,248 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct FilterView: View {
-    @State private var distance = 0
-    @State private var price = 0
-    @State private var price2 = 0
-    @State private var price3 = 0
-    @State private var price4 = 0
 
-    private var strPrice = ""
+    @State private var distance = 0
+    @State private var radius = 0
+    @State private var price = 1
+    @State private var price2 = 1
+    @State private var price3 = 1
+    @State private var price4 = 1
+    
+    @State private var prices: [Int] = []
+
+    
+    
+    @State var latitude: CLLocationDegrees
+    @State var longitude: CLLocationDegrees
+    
+
     @State private var isEditing = false
-    @State private var openNow = true
+    @State private var isOpen = true
     @State private var userMood = ""
     @State private var isSwiperViewActive = false
+    
     @ObservedObject var vm = RestaurantListViewModel()
+    @ObservedObject var locationManager: LocationManager
+    
     var body: some View {
+        
         NavigationStack {
-            //title
-            Text("Filters")
-                .font(.title)
-                .fontWeight(.bold)
-            
-            Spacer()
-            
-            //link to swiper view
-            NavigationLink(destination: SwiperView(vm: vm), isActive: $isSwiperViewActive) {
-                            EmptyView()
+            ZStack {
+                Color.backgroundMain
+                    .edgesIgnoringSafeArea(.all)
+                VStack {
+                    Text("Filters")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundColor(.headers)
+                        .italic()
+                        .background(
+                            Rectangle()
+                                .frame(width: 400, height: 120)
+                                .padding(.bottom, 50)
+                                .foregroundColor(.white)
+                        )
+                    Spacer()
+                    
+                    //add the ability to set location
+                    HStack {
+                        Button {
+                            locationManager.startFetchingCurrentLocation()
+                            
+                            if let location = locationManager.userLocation {
+                                latitude = location.coordinate.latitude
+                                longitude = location.coordinate.longitude
+                                print("got latitude and longitude")
+                                print("Latitude: \(latitude)\nLongitude: \(longitude)")
+                            } else {
+                                // Handle the case where userLocation is nil
+                                // You can display an alert or take appropriate action
+                                print("User location not available")
+                            }
+                        } label: {
+                            VStack {
+                                Text("USE MY")
+                                Text("LOCATION")
+                            }.font(.headline)
+                                .italic()
+
+                        }.padding()
+                            .foregroundColor(.black)
+                            .frame(width: 150, height: 60)
+                            .background(
+                                RoundedRectangle(cornerRadius: 40)
+                                    .fill(Color.white)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 40)
+                                            .stroke(Color.black, lineWidth: 1)
+                                    )
+                                
+                            )
+                        Button {
+                            
+                        } label: {
+                            VStack {
+                                Text("SELECT")
+                                Text("LOCATION")
+                            }.font(.headline)
+                                .italic()
+                        }.padding()
+                            .foregroundColor(.black)
+                            .frame(width: 150, height: 60)
+                            .background(
+                                RoundedRectangle(cornerRadius: 40)
+                                    .fill(Color.white)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 40)
+                                            .stroke(Color.black, lineWidth: 1)
+                                    )
+                                
+                            )
+                    }
+                    .padding(.bottom, 30)
+                    
+                    
+                    //get distance parameter
+                    HStack {
+                        Text("How far are you willing \nto go?")
+                            .foregroundColor(.white)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .padding(.trailing, 10)
+                            .shadow(color:.gray, radius: 5)
+                        Picker("Distance", selection: $distance) {
+                            ForEach(0...25, id: \.self) { mile in
+                                Text("\(mile) mi")
+                            }
+                        }.background(Color.white)
+                            .cornerRadius(20)
+                            .accentColor(.black)
+                    }.padding(.bottom, 30)
+                    
+                    //get price range
+                    Text("Price Range:")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .shadow(color:.gray, radius: 5)
+                        .padding(.trailing, 200)
+                    
+                    HStack(spacing: 0) {
+                        Button {
+                            updatePrice(1)
+                            print("\(prices)")
+
+                        } label: {
+                            Text("$")
+                        }.frame(width: 82, height: 70)
+                            .tint(prices.contains(1) ? Color.white : Color.headers)
+                            .background(prices.contains(1) ? Color.headers : Color.white)
+                            .border(.black)
+                        Button {
+                            updatePrice(2)
+                            print("\(prices)")
+
+                        } label: {
+                            Text("$$")
+                        }.frame(width: 82, height: 70)
+                            .tint(prices.contains(2) ? Color.white : Color.headers)
+                            .background(prices.contains(2) ? Color.headers : Color.white)
+                                .border(.black)
+                        Button {
+                            updatePrice(3)
+                            print("\(prices)")
+
+                        } label: {
+                            Text("$$$")
+                        }.frame(width: 82, height: 70)
+                            .tint(prices.contains(3) ? Color.white : Color.headers)
+                            .background(prices.contains(3) ? Color.headers : Color.white)
+                                .border(.black)
+                        Button {
+                            updatePrice(4)
+                            print("\(prices)")
+
+                        } label: {
+                            Text("$$$$")
+                        }.frame(width: 82, height: 70)
+                            .tint(prices.contains(4) ? Color.white : Color.headers)
+                            .background(prices.contains(4) ? Color.headers : Color.white)
+                                .border(.black)
+                    }
+                        .font(.title2)
+                        .fontWeight(.medium)
+                        .padding(.bottom, 20)
+                    
+
+                    
+                    //get terms
+                    Text("What are you craving?")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .shadow(color:.gray, radius: 5)
+                        .padding(.trailing, 100)
+                    TextField("ex: fast food, breakfast, chinese", text: $userMood)
+                        .multilineTextAlignment(.center)
+                        .frame(width: 300, height: 40)
+                        .background(.white)
+                        .cornerRadius(20)
+                        .shadow(radius: 2)
+                        .padding(.bottom, 20)
+                    //get whether they want it to be open
+                    Toggle("Only show open restaurants", isOn: $isOpen)
+                        .padding(.horizontal, 20)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .shadow(color:.gray, radius: 5)
+                        .tint(Color.headers)
+                        .padding(.bottom, 20)
+                    
+                    //submit button that takes you to SwiperView()
+                    Button(action: {
+                        radius = distance * 1609
+                        vm.term = userMood
+                        vm.prices = prices
+                        if let location = locationManager.userLocation {
+                            vm.getPlaces(with: userMood, longitude: longitude, latitude: latitude, radius: radius, openNow: isOpen, prices: prices)
+                            isSwiperViewActive = true
+                        } else {
+                            // Handle the case where userLocation is nil
+                            // You can display an alert or take appropriate action
+                            print("User location not available")
                         }
-                        .hidden()
-            VStack {
-                //add the ability to set location
-                //get distance parameter
-                Text("How far are you willing to go?")
-                Picker("Distance", selection: $distance) {
-                    ForEach(0...25, id: \.self) { mile in
-                        Text("\(mile) Miles").tag(mile)
+                    }, label: {
+                        Text("SUBMIT")
+                            .font(.title2)
+                            .fontWeight(.medium)
+                            .italic()
+                            .foregroundColor(.black)
+                            .frame(width: 150, height: 50)
+                            .background(
+                                RoundedRectangle(cornerRadius: 40)
+                                    .fill(Color.white)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 40)
+                                            .stroke(Color.black, lineWidth: 1)
+                                    )
+                                
+                            )
+                            .padding(.bottom, 20)
+                    }).navigationDestination(isPresented: $isSwiperViewActive) {
+                        SwiperView(vm: vm)
                     }
-                }.padding(.bottom, 15)
-                //get price range
-                Text("What's your price range?")
-                Slider(
-                    value: Binding<Double>(
-                            get: { Double(price) },
-                            set: { price = Int($0) }
-                        ),
-                    in: 1...4,
-                    step: 1,
-                    onEditingChanged: { editing in
-                        isEditing = editing
-                    }
-                ).padding(.horizontal, 30)
-                Text("Price: \(priceString())")
-                    .padding(.bottom, 15)
-                
-                //get terms
-                Text("What are you in the mood for?")
-                TextField("ex: fast food, breakfast, chinese", text: $userMood)
-                    .multilineTextAlignment(.center)
-                    .padding(.bottom, 15)
-                //get whether they want it to be open
-                Toggle("Only show open restaurants", isOn: $openNow)
-                    .padding(.horizontal, 40)
-                
-                //submit button that takes you to SwiperView()
-                Button(action: {
-                    vm.term = userMood
-                    vm.getPlaces(with: userMood, price: price, price2: 2, price3: 3, price4: 4, radius: distance)
-                    isSwiperViewActive = true
-                }, label: {
-                    Text("Submit")
-                })
+                    Spacer()
+                }
+
             }
-            Spacer()
+            
         }
         
-        
-        
-        /*Filters needed
-        location (coordinates)
-        term (what's ur mood)
-        distance
-        price
-        openNow?
-        */
         
     }
     func priceString() -> String {
@@ -103,11 +262,19 @@ struct FilterView: View {
                     return "$"
             }
         }
+    func updatePrice(_ price: Int) {
+            if prices.contains(price) {
+                prices.removeAll(where: { $0 == price })
+            } else {
+                prices.append(price)
+            }
+            print(prices)
+        }
     
 }
 
 
 
 #Preview {
-    FilterView()
+    FilterView(latitude: 40.7128, longitude: -74.0060, vm: RestaurantListViewModel(), locationManager: LocationManager())
 }

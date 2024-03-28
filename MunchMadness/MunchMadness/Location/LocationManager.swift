@@ -24,7 +24,7 @@ class LocationManager: NSObject, ObservableObject {
     func startFetchingCurrentLocation() {
             manager.startUpdatingLocation()
     }
-    func locationManager(_manager: CLLocationManager, didFailWithError error: Error) {
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
     }
     func stopFetchingCurrentLocaiton() {

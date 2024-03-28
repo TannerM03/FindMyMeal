@@ -20,6 +20,7 @@ struct RestaurantViewModel: Codable {
     var city: String?
     var displayPhone: String?
     var distance: Double?
+    
 }
 
 

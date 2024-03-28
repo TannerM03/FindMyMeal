@@ -55,7 +55,7 @@ struct SwiperView: View {
             }
         }
         .onAppear {
-            vm.getPlaces(with: vm.term, price: vm.price, price2: 2, price3: 3, price4: 4, radius: vm.radius)
+            vm.getPlaces(with: vm.term, longitude: vm.longitude, latitude: vm.latitude, radius: vm.radius, openNow: vm.openNow, prices: vm.prices)
         }
     }
     

@@ -9,36 +9,30 @@ import SwiftUI
 
 struct HomeView: View {
     @Binding var selectedTab: String
+    @StateObject var lm = LocationManager()
+    
     var body: some View {
+        
         NavigationView {
-            
-            VStack {
-                Text("MUNCH MADNESS")
-                    .font(.largeTitle)
-                    .fontWeight(.heavy)
-                    .padding(.top, 50)
+            ZStack {
+                Color.backgroundMain
+                    .edgesIgnoringSafeArea(.all)
                 
-                Spacer()
+                VStack {
+                    Text("MUNCH MADNESS")
+                        .font(.largeTitle)
+                        .fontWeight(.heavy)
+                        .padding(.top, 50)
+                    
+                    
+                    Spacer()
+                    
+                    BeginButton(selectedTab: $selectedTab)
+                    Spacer()
+                }
                 
-                Button(action: {
-                    selectedTab = "2"
-                }, label: {
-                    Text("Let the Madness begin!")
-                })
-                .padding()
-                .foregroundColor(.white)
-                .background(
-                    RoundedRectangle(cornerRadius: 40)
-                )
-                .padding(.bottom, 50)
-                Spacer()
-            }.background(
-                Image("bracket")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 500, height: 300)
-                    .rotationEffect(.degrees(90))
-                    .padding(.top, 40))
+            }
+
             
         }
     }
@@ -49,5 +43,31 @@ struct HomeView_Previews: PreviewProvider {
     
     static var previews: some View {
         HomeView(selectedTab: $tab)
+    }
+}
+
+struct BeginButton: View {
+    @Binding var selectedTab: String
+    var body: some View {
+        Button(action: {
+            selectedTab = "2"
+        }, label: {
+            Text("BEGIN")
+                .font(.title2)
+        })
+        
+        .padding()
+        .foregroundColor(.black)
+        .frame(width: 150, height: 60)
+        .background(
+            RoundedRectangle(cornerRadius: 40)
+                .fill(Color.white)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 40)
+                        .stroke(Color.black, lineWidth: 1)
+                )
+            
+        )
+        .padding(.bottom, 50)
     }
 }

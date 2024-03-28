@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 extension RestaurantViewModel {
     static let example = RestaurantViewModel(name: "Chipotle", isClosed: false, reviewCount: 400, imageUrl: "", rating: 4.5, price: "$", address1: "301 W Franklin St", city: "Chapel Hill", displayPhone: "(919) 942-2091", distance: 1.3)
 }

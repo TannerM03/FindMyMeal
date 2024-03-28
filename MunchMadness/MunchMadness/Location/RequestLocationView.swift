@@ -7,12 +7,29 @@
 
 import SwiftUI
 
-struct RequestLocationView: View {
+struct RequestLocationAccessView: View {
+    @ObservedObject var locationManager: LocationManager
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            Color.black.ignoresSafeArea()
+            VStack() {
+                Image(systemName: "paperplane.circle.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 50, height: 50)
+                    .foregroundColor(.blue)
+                    .padding(.bottom, 5)
+                Text("We will use your location to display restaurants near you")
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                    .frame(width: 300)
+                    .padding(.bottom, 10)
+                Button {
+                    locationManager.requestLocationAccess()
+                } label: {
+                    Text("Allow access")
+                }
+            }
+        }
     }
-}
-
-#Preview {
-    RequestLocationView()
 }

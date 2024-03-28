@@ -7,4 +7,6 @@
 
 import Foundation
 
-let yelpKey = "jP1JFTIs5K0_F_LOWNo4F7dGM9tk0LxL2tHw42Cv7wE-aJMmBqAmcWuAe9hMy8LMntqe17rEMTgUE7tSLZgae8_P8jzkMOJNgahnDNxLZWvj-8f9vUBNhTUBAUPqZXYx"
+enum Secret {
+    static let yelpKey = "UP9-eFyRCEiCmnKHMx17W8VAgNaqAhzv_Bompfnoa3oRq9cjTdZQ01TOn5NlBDZT9HQExpLvvjXInQHc35ohcVzVIju0mx4VOjEebdYzqPe0D_WFsXzH38XUJkMAZnYx"
+}

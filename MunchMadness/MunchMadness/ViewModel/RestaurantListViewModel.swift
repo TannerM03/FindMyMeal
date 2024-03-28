@@ -6,20 +6,21 @@
 //
 
 import Foundation
+import CoreLocation
+import SwiftUI
 
 class RestaurantListViewModel: ObservableObject {
-    @Published var latitude: Double = 35.920165
-    @Published var longitude: Double = -79.053702
+    @Published var latitude: CLLocationDegrees = 0.0
+    @Published var longitude: CLLocationDegrees = 0.0
     @Published var category: String = "restaurant"
     @Published var term: String = ""
     @Published var limit: Int = 10
-    @Published var price: Int = 1
-    @Published var price2: Int = 2
-    @Published var price3: Int = 3
-    @Published var price4: Int = 4
+    @Published var prices: [Int] = []
     @Published var radius: Int = 0
-    //radius: 1609 meters in a mile
-    //price: 1-4
+    @Published var openNow: Bool = false
+    
+    @Published var priceArray: [Int] = [1,2]
+
 
     
     @Published var restaurants: [RestaurantViewModel] = []
@@ -27,14 +28,23 @@ class RestaurantListViewModel: ObservableObject {
     @Published var errorMessage: String = ""
     @Published var isLoading: Bool = false
   
-    func getPlaces(with term: String, price: Int, price2: Int, price3: Int, price4: Int, radius: Int) {
+    func getPlaces(with term: String, longitude: CLLocationDegrees, latitude: CLLocationDegrees, radius: Int, openNow: Bool, prices: [Int]) {
+        self.term = term
+        self.longitude = longitude
+        self.latitude = latitude
+        self.radius = radius
+        self.openNow = openNow
+        self.prices = prices
+        
 
-        getRestaurants(latitude: latitude, longitude: longitude, category: category, limit: limit, term: term, price: price, price2: price2, price3: price3, price4: price4, radius: radius) { (restaurants, error) in
+        YelpService.getRestaurants(latitude: latitude, longitude: longitude, category: category, limit: limit, term: term, prices: prices, radius: radius, open_now: openNow ) { (restaurants, error) in
             if let error = error {
+                print("price array: \(prices)")
                 print("Error fetching restaurants: \(error)")
             } else if let restaurants = restaurants {
                 DispatchQueue.main.async {
                     self.restaurants = restaurants
+                    print("getRestaurants --> Latitude: \(latitude)Longitude: \(longitude)category: \(self.category)limit: \(self.limit)term: \(term)price: \(prices)radius: \(radius) isOpen: \(openNow)")
                     print("Fetched \(restaurants.count) restaurants")
                 }
             }
