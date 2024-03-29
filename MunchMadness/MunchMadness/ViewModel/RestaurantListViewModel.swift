@@ -20,6 +20,7 @@ class RestaurantListViewModel: ObservableObject {
     @Published var openNow: Bool = false
     
     @Published var priceArray: [Int] = [1,2]
+    @Published var attributes: String = "restaurants_delivery"
 
 
     
