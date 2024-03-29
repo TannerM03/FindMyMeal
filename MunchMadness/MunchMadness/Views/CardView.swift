@@ -12,9 +12,10 @@ struct CardView: View {
     
     var body: some View {
         VStack(alignment: .leading){
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(spacing: 8) {
                 Text(restaurant.name ?? "")
                     .font(.title)
+                    .multilineTextAlignment(.center)
                 HStack {
                     if let rating = restaurant.rating {
                         Text(String(format: "%.1f", rating))

@@ -12,14 +12,8 @@ struct FilterView: View {
 
     @State private var distance = 0
     @State private var radius = 0
-    @State private var price = 1
-    @State private var price2 = 1
-    @State private var price3 = 1
-    @State private var price4 = 1
     
     @State private var prices: [Int] = []
-
-    
     
     @State var latitude: CLLocationDegrees
     @State var longitude: CLLocationDegrees
@@ -136,53 +130,8 @@ struct FilterView: View {
                         .shadow(color:.gray, radius: 5)
                         .padding(.trailing, 200)
                     
-                    HStack(spacing: 0) {
-                        Button {
-                            updatePrice(1)
-                            print("\(prices)")
-
-                        } label: {
-                            Text("$")
-                        }.frame(width: 82, height: 70)
-                            .tint(prices.contains(1) ? Color.white : Color.headers)
-                            .background(prices.contains(1) ? Color.headers : Color.white)
-                            .border(.black)
-                        Button {
-                            updatePrice(2)
-                            print("\(prices)")
-
-                        } label: {
-                            Text("$$")
-                        }.frame(width: 82, height: 70)
-                            .tint(prices.contains(2) ? Color.white : Color.headers)
-                            .background(prices.contains(2) ? Color.headers : Color.white)
-                                .border(.black)
-                        Button {
-                            updatePrice(3)
-                            print("\(prices)")
-
-                        } label: {
-                            Text("$$$")
-                        }.frame(width: 82, height: 70)
-                            .tint(prices.contains(3) ? Color.white : Color.headers)
-                            .background(prices.contains(3) ? Color.headers : Color.white)
-                                .border(.black)
-                        Button {
-                            updatePrice(4)
-                            print("\(prices)")
-
-                        } label: {
-                            Text("$$$$")
-                        }.frame(width: 82, height: 70)
-                            .tint(prices.contains(4) ? Color.white : Color.headers)
-                            .background(prices.contains(4) ? Color.headers : Color.white)
-                                .border(.black)
-                    }
-                        .font(.title2)
-                        .fontWeight(.medium)
-                        .padding(.bottom, 20)
+                    PricesFilter(prices: $prices)
                     
-
                     
                     //get terms
                     Text("What are you craving?")
@@ -250,18 +199,65 @@ struct FilterView: View {
         
         
     }
-    func priceString() -> String {
-            switch price {
-                case 4:
-                    return "$$$$"
-                case 3:
-                    return "$$$"
-                case 2:
-                    return "$$"
-                default:
-                    return "$"
-            }
+    
+    
+}
+
+
+
+#Preview {
+    FilterView(latitude: 40.7128, longitude: -74.0060, vm: RestaurantListViewModel(), locationManager: LocationManager())
+}
+
+struct PricesFilter: View {
+    @Binding var prices: [Int]
+    var body: some View {
+        HStack(spacing: 0) {
+            Button {
+                updatePrice(1)
+                print("\(prices)")
+                
+            } label: {
+                Text("$")
+            }.frame(width: 82, height: 70)
+                .tint(prices.contains(1) ? Color.white : Color.headers)
+                .background(prices.contains(1) ? Color.headers : Color.white)
+                .border(.black)
+            Button {
+                updatePrice(2)
+                print("\(prices)")
+                
+            } label: {
+                Text("$$")
+            }.frame(width: 82, height: 70)
+                .tint(prices.contains(2) ? Color.white : Color.headers)
+                .background(prices.contains(2) ? Color.headers : Color.white)
+                .border(.black)
+            Button {
+                updatePrice(3)
+                print("\(prices)")
+                
+            } label: {
+                Text("$$$")
+            }.frame(width: 82, height: 70)
+                .tint(prices.contains(3) ? Color.white : Color.headers)
+                .background(prices.contains(3) ? Color.headers : Color.white)
+                .border(.black)
+            Button {
+                updatePrice(4)
+                print("\(prices)")
+                
+            } label: {
+                Text("$$$$")
+            }.frame(width: 82, height: 70)
+                .tint(prices.contains(4) ? Color.white : Color.headers)
+                .background(prices.contains(4) ? Color.headers : Color.white)
+                .border(.black)
         }
+        .font(.title2)
+        .fontWeight(.medium)
+        .padding(.bottom, 20)
+    }
     func updatePrice(_ price: Int) {
             if prices.contains(price) {
                 prices.removeAll(where: { $0 == price })
@@ -270,11 +266,4 @@ struct FilterView: View {
             }
             print(prices)
         }
-    
-}
-
-
-
-#Preview {
-    FilterView(latitude: 40.7128, longitude: -74.0060, vm: RestaurantListViewModel(), locationManager: LocationManager())
 }
