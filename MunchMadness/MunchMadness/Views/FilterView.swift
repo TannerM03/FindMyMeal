@@ -27,6 +27,8 @@ struct FilterView: View {
     @ObservedObject var vm = RestaurantListViewModel()
     @ObservedObject var locationManager: LocationManager
     
+    @State private var mapView: Bool = false
+    
     var body: some View {
         
         NavigationStack {
@@ -82,7 +84,7 @@ struct FilterView: View {
                                 
                             )
                         Button {
-                            
+                            mapView.toggle()
                         } label: {
                             VStack {
                                 Text("SELECT")
@@ -100,7 +102,9 @@ struct FilterView: View {
                                             .stroke(Color.black, lineWidth: 1)
                                     )
                                 
-                            )
+                            ).navigationDestination(isPresented: $mapView) {
+                                SelectLocationView()
+                            }
                     }
                     .padding(.bottom, 30)
                     

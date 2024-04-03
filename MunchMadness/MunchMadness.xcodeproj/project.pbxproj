@@ -26,6 +26,7 @@
 		E3BC341B2BAA079000FFBA53 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BC341A2BAA079000FFBA53 /* LocationManager.swift */; };
 		E3BC341D2BAA07CC00FFBA53 /* RequestLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BC341C2BAA07CC00FFBA53 /* RequestLocationView.swift */; };
 		E3BE1A392BACF11600503F44 /* TabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BE1A382BACF11600503F44 /* TabsView.swift */; };
+		E3DB65442BBD10BA00DFB606 /* SelectLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DB65432BBD10BA00DFB606 /* SelectLocationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,7 @@
 		E3BC341A2BAA079000FFBA53 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		E3BC341C2BAA07CC00FFBA53 /* RequestLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestLocationView.swift; sourceTree = "<group>"; };
 		E3BE1A382BACF11600503F44 /* TabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsView.swift; sourceTree = "<group>"; };
+		E3DB65432BBD10BA00DFB606 /* SelectLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectLocationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 				E3BC340D2BA74F3500FFBA53 /* SwiperView.swift */,
 				E3BC34112BA7A12E00FFBA53 /* ProfileView.swift */,
 				E3BC34132BA7A13900FFBA53 /* FilterView.swift */,
+				E3DB65432BBD10BA00DFB606 /* SelectLocationView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -237,6 +240,7 @@
 				E3BC33FF2B9A84E200FFBA53 /* Errors.swift in Sources */,
 				E3BC34052BA7386300FFBA53 /* YelpAPI.swift in Sources */,
 				E3BC33ED2B9A7FE700FFBA53 /* MunchMadnessApp.swift in Sources */,
+				E3DB65442BBD10BA00DFB606 /* SelectLocationView.swift in Sources */,
 				E3BC33FB2B9A7FF900FFBA53 /* RestaurantViewModel.swift in Sources */,
 				E3BC33FD2B9A833300FFBA53 /* YelpService.swift in Sources */,
 			);
