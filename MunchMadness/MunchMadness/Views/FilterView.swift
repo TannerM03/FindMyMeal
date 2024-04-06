@@ -170,6 +170,8 @@ struct FilterView: View {
                             vm.getPlaces(with: userMood, longitude: longitude, latitude: latitude, radius: radius, openNow: isOpen, prices: prices)
                             isSwiperViewActive = true
                         } else {
+                            vm.getPlaces(with: userMood, longitude: longitude, latitude: latitude, radius: radius, openNow: isOpen, prices: prices)
+                            isSwiperViewActive = true
                             // Handle the case where userLocation is nil
                             // You can display an alert or take appropriate action
                             print("User location not available")
