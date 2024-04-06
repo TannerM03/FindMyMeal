@@ -9,14 +9,17 @@ import SwiftUI
 import MapKit
 
 struct SelectLocationView: View {
+    @Environment(\.presentationMode) var presentationMode
+
     @State private var cameraPosition: MapCameraPosition = .region(.starterRegion)
     @State private var searchText = ""
     @State private var results: [MKMapItem] = []
     
     @State private var backToFilter: Bool = false
     
-    @State private var selectedLatitude: CLLocationDegrees = 40.7128
-    @State private var selectedLongitude: CLLocationDegrees = -74.0060
+    @Binding var selectedLatitude: CLLocationDegrees
+    @Binding var selectedLongitude: CLLocationDegrees
+    
     
     @State private var onLocationSelected: ((CLLocationDegrees, CLLocationDegrees) -> Void)?
     
@@ -47,17 +50,15 @@ struct SelectLocationView: View {
                         if let firstItem = results.first {
                             print("past first param")
                             print("\(firstItem.placemark.coordinate.latitude)")
-//                            onLocationSelected!(firstItem.placemark.coordinate.latitude, firstItem.placemark.coordinate.longitude)
                                 selectedLongitude = firstItem.placemark.coordinate.longitude
                                 selectedLatitude = firstItem.placemark.coordinate.latitude
                                 print("Longitude: \(selectedLongitude)")
                         }
+                        presentationMode.wrappedValue.dismiss()
                     }, label: {
                         Text("Submit")
                     })
-//                    .navigationDestination(isPresented: $backToFilter) {
-//                        FilterView(latitude: selectedLatitude, longitude: selectedLongitude, vm: RestaurantListViewModel(), locationManager: LocationManager())
-//                    }
+
                     .padding()
                         .foregroundColor(.black)
                         .frame(width: 150, height: 60)
@@ -70,13 +71,8 @@ struct SelectLocationView: View {
                                 )
                             
                         )
-                    NavigationLink(
-                                        destination: FilterView(latitude: selectedLatitude, longitude: selectedLongitude, vm: RestaurantListViewModel(), locationManager: LocationManager()),
-                                        isActive: $swiperTime
-                                    ) {
-                                        EmptyView()
-                                    }
-                        
+                        .padding(.bottom, 20)
+
                 }
             }
             .onSubmit(of: .text) {
@@ -88,7 +84,7 @@ struct SelectLocationView: View {
                         }
                         var resultRegion: MKCoordinateRegion {
                             return .init(center: resultLocation,
-                                         latitudinalMeters: 50000, longitudinalMeters: 50000)
+                                         latitudinalMeters: 10000, longitudinalMeters: 10000)
                         }
                         cameraPosition = .region(resultRegion)
                         selectedLatitude = firstItem.placemark.coordinate.latitude
@@ -134,6 +130,6 @@ extension MKCoordinateRegion {
 }
 
 
-#Preview {
-    SelectLocationView()
-}
+//#Preview {
+//    SelectLocationView(selectedLatitude: 40.7128, selectedLongitude: -74.0060 )
+//}

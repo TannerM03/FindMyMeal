@@ -35,8 +35,7 @@ struct TabsView: View {
         }
         .onAppear() {
             UITabBar.appearance().backgroundColor = .white
-        }.tint(.headers)
-            .accentColor(.yellow)
+        }.tint(.darkerblue)
     }
 }
 

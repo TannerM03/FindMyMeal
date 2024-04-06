@@ -18,7 +18,11 @@ struct FilterView: View {
     @State var latitude: CLLocationDegrees
     @State var longitude: CLLocationDegrees
     
-
+    @State var selectedLongitude: CLLocationDegrees = 0
+    @State var selectedLatitude: CLLocationDegrees = 0
+    
+    @State private var usingPersonalLocation = false
+    
     @State private var isEditing = false
     @State private var isOpen = true
     @State private var userMood = ""
@@ -33,13 +37,13 @@ struct FilterView: View {
         
         NavigationStack {
             ZStack {
-                Color.backgroundMain
+                Color.uncBlue
                     .edgesIgnoringSafeArea(.all)
                 VStack {
                     Text("Filters")
                         .font(.largeTitle)
                         .fontWeight(.bold)
-                        .foregroundColor(.headers)
+                        .foregroundColor(.darkerblue)
                         .italic()
                         .background(
                             Rectangle()
@@ -51,60 +55,10 @@ struct FilterView: View {
                     
                     //add the ability to set location
                     HStack {
-                        Button {
-                            locationManager.startFetchingCurrentLocation()
-                            
-                            if let location = locationManager.userLocation {
-                                latitude = location.coordinate.latitude
-                                longitude = location.coordinate.longitude
-                                print("got latitude and longitude")
-                                print("Latitude: \(latitude)\nLongitude: \(longitude)")
-                            } else {
-                                // Handle the case where userLocation is nil
-                                // You can display an alert or take appropriate action
-                                print("User location not available")
-                            }
-                        } label: {
-                            VStack {
-                                Text("USE MY")
-                                Text("LOCATION")
-                            }.font(.headline)
-                                .italic()
-
-                        }.padding()
-                            .foregroundColor(.black)
-                            .frame(width: 150, height: 60)
-                            .background(
-                                RoundedRectangle(cornerRadius: 40)
-                                    .fill(Color.white)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 40)
-                                            .stroke(Color.black, lineWidth: 1)
-                                    )
-                                
-                            )
-                        Button {
-                            mapView.toggle()
-                        } label: {
-                            VStack {
-                                Text("SELECT")
-                                Text("LOCATION")
-                            }.font(.headline)
-                                .italic()
-                        }.padding()
-                            .foregroundColor(.black)
-                            .frame(width: 150, height: 60)
-                            .background(
-                                RoundedRectangle(cornerRadius: 40)
-                                    .fill(Color.white)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 40)
-                                            .stroke(Color.black, lineWidth: 1)
-                                    )
-                                
-                            ).navigationDestination(isPresented: $mapView) {
-                                SelectLocationView()
-                            }
+                        UserLocationBtn(locationManager: locationManager, latitude: $latitude, longitude: $longitude, usingPersonalLocation: $usingPersonalLocation)
+                        
+                        SelectLocationBtn(usingPersonalLocation: $usingPersonalLocation, mapView: $mapView, selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude)
+                        
                     }
                     .padding(.bottom, 30)
                     
@@ -117,13 +71,9 @@ struct FilterView: View {
                             .fontWeight(.bold)
                             .padding(.trailing, 10)
                             .shadow(color:.gray, radius: 5)
-                        Picker("Distance", selection: $distance) {
-                            ForEach(0...25, id: \.self) { mile in
-                                Text("\(mile) mi")
-                            }
-                        }.background(Color.white)
-                            .cornerRadius(20)
-                            .accentColor(.black)
+                        
+                        DistancePicker(distance: $distance)
+                        
                     }.padding(.bottom, 30)
                     
                     //get price range
@@ -158,44 +108,12 @@ struct FilterView: View {
                         .fontWeight(.bold)
                         .foregroundColor(.white)
                         .shadow(color:.gray, radius: 5)
-                        .tint(Color.headers)
+                        .tint(Color.darkerblue)
                         .padding(.bottom, 20)
                     
                     //submit button that takes you to SwiperView()
-                    Button(action: {
-                        radius = distance * 1609
-                        vm.term = userMood
-                        vm.prices = prices
-                        if let location = locationManager.userLocation {
-                            vm.getPlaces(with: userMood, longitude: longitude, latitude: latitude, radius: radius, openNow: isOpen, prices: prices)
-                            isSwiperViewActive = true
-                        } else {
-                            vm.getPlaces(with: userMood, longitude: longitude, latitude: latitude, radius: radius, openNow: isOpen, prices: prices)
-                            isSwiperViewActive = true
-                            // Handle the case where userLocation is nil
-                            // You can display an alert or take appropriate action
-                            print("User location not available")
-                        }
-                    }, label: {
-                        Text("SUBMIT")
-                            .font(.title2)
-                            .fontWeight(.medium)
-                            .italic()
-                            .foregroundColor(.black)
-                            .frame(width: 150, height: 50)
-                            .background(
-                                RoundedRectangle(cornerRadius: 40)
-                                    .fill(Color.white)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 40)
-                                            .stroke(Color.black, lineWidth: 1)
-                                    )
-                                
-                            )
-                            .padding(.bottom, 20)
-                    }).navigationDestination(isPresented: $isSwiperViewActive) {
-                        SwiperView(vm: vm)
-                    }
+                    SubmitBtn(distance: $distance, userMood: $userMood, prices: $prices, usingPersonalLocation: $usingPersonalLocation, radius: $radius, isSwiperViewActive: $isSwiperViewActive, isOpen: $isOpen, latitude: $latitude, longitude: $longitude, selectedLongitude: $selectedLongitude, selectedLatitude: $selectedLatitude)
+                    
                     Spacer()
                 }
 
@@ -226,8 +144,8 @@ struct PricesFilter: View {
             } label: {
                 Text("$")
             }.frame(width: 82, height: 70)
-                .tint(prices.contains(1) ? Color.white : Color.headers)
-                .background(prices.contains(1) ? Color.headers : Color.white)
+                .tint(prices.contains(1) ? Color.white : Color.darkerblue)
+                .background(prices.contains(1) ? Color.darkerblue : Color.white)
                 .border(.black)
             Button {
                 updatePrice(2)
@@ -236,8 +154,8 @@ struct PricesFilter: View {
             } label: {
                 Text("$$")
             }.frame(width: 82, height: 70)
-                .tint(prices.contains(2) ? Color.white : Color.headers)
-                .background(prices.contains(2) ? Color.headers : Color.white)
+                .tint(prices.contains(2) ? Color.white : Color.darkerblue)
+                .background(prices.contains(2) ? Color.darkerblue : Color.white)
                 .border(.black)
             Button {
                 updatePrice(3)
@@ -246,8 +164,8 @@ struct PricesFilter: View {
             } label: {
                 Text("$$$")
             }.frame(width: 82, height: 70)
-                .tint(prices.contains(3) ? Color.white : Color.headers)
-                .background(prices.contains(3) ? Color.headers : Color.white)
+                .tint(prices.contains(3) ? Color.white : Color.darkerblue)
+                .background(prices.contains(3) ? Color.darkerblue : Color.white)
                 .border(.black)
             Button {
                 updatePrice(4)
@@ -256,8 +174,8 @@ struct PricesFilter: View {
             } label: {
                 Text("$$$$")
             }.frame(width: 82, height: 70)
-                .tint(prices.contains(4) ? Color.white : Color.headers)
-                .background(prices.contains(4) ? Color.headers : Color.white)
+                .tint(prices.contains(4) ? Color.white : Color.darkerblue)
+                .background(prices.contains(4) ? Color.darkerblue : Color.white)
                 .border(.black)
         }
         .font(.title2)
@@ -272,4 +190,150 @@ struct PricesFilter: View {
             }
             print(prices)
         }
+}
+
+struct DistancePicker: View {
+    @Binding var distance: Int
+    var body: some View {
+        Picker("Distance", selection: $distance) {
+            ForEach(0...25, id: \.self) { mile in
+                Text("\(mile) mi")
+            }
+        }.background(Color.white)
+            .cornerRadius(20)
+            .accentColor(.black)
+    }
+}
+
+struct SelectLocationBtn: View {
+    @Binding var usingPersonalLocation: Bool
+    @Binding var mapView: Bool
+    @Binding var selectedLatitude: CLLocationDegrees
+    @Binding var selectedLongitude: CLLocationDegrees
+    var body: some View {
+        Button {
+            usingPersonalLocation = false
+            mapView.toggle()
+        } label: {
+            VStack {
+                Text("SELECT")
+                Text("LOCATION")
+            }.font(.headline)
+                .italic()
+        }.padding()
+            .foregroundColor(.black)
+            .frame(width: 150, height: 60)
+            .background(
+                RoundedRectangle(cornerRadius: 40)
+                    .fill(Color.white)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 40)
+                            .stroke(Color.black, lineWidth: 1)
+                    )
+                
+            ).navigationDestination(isPresented: $mapView) {
+                SelectLocationView(selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude)
+            }
+    }
+}
+
+struct UserLocationBtn: View {
+    @ObservedObject var locationManager: LocationManager
+    @Binding var latitude: CLLocationDegrees
+    @Binding var longitude: CLLocationDegrees
+    @Binding var usingPersonalLocation: Bool
+    var body: some View {
+        Button {
+            Task {
+                locationManager.startFetchingCurrentLocation()
+                
+                //this gives it time to actually fetch the location before the if
+                //statement, not sure if this is best practice (probably not)
+                try await Task.sleep(nanoseconds: 0_050_000_000)
+                
+                if let location = locationManager.userLocation {
+                    latitude = location.coordinate.latitude
+                    longitude = location.coordinate.longitude
+                    print("got latitude and longitude")
+                    print("Latitude: \(latitude)\nLongitude: \(longitude)")
+                    usingPersonalLocation = true
+                    
+                }
+                else {
+                    //might wanna ask for location again here
+                    print("User location not available")
+                }
+            }
+        } label: {
+            VStack {
+                Text("USE MY")
+                Text("LOCATION")
+            }.font(.headline)
+                .italic()
+            
+        }.padding()
+            .foregroundColor(.black)
+            .frame(width: 150, height: 60)
+            .background(
+                RoundedRectangle(cornerRadius: 40)
+                    .fill(Color.white)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 40)
+                            .stroke(Color.black, lineWidth: 1)
+                    )
+                
+            )
+    }
+}
+
+struct SubmitBtn: View {
+    @Binding var distance: Int
+    @Binding var userMood: String
+    @Binding var prices: [Int]
+    @Binding var usingPersonalLocation: Bool
+    @Binding var radius: Int
+    @Binding var isSwiperViewActive: Bool
+    @Binding var isOpen: Bool
+    @Binding var latitude: CLLocationDegrees
+    @Binding var longitude: CLLocationDegrees
+    @Binding var selectedLongitude: CLLocationDegrees
+    @Binding var selectedLatitude: CLLocationDegrees
+    @ObservedObject var vm = RestaurantListViewModel()
+
+    var body: some View {
+        Button(action: {
+            radius = distance * 1609
+            vm.term = userMood
+            vm.prices = prices
+            if usingPersonalLocation == true {
+                vm.getPlaces(with: userMood, longitude: longitude, latitude: latitude, radius: radius, openNow: isOpen, prices: prices)
+                isSwiperViewActive = true
+            } else if usingPersonalLocation == false {
+                vm.getPlaces(with: userMood, longitude: selectedLongitude, latitude: selectedLatitude, radius: radius, openNow: isOpen, prices: prices)
+                isSwiperViewActive = true
+            }
+            else {
+                print("Location not available")
+            }
+        }, label: {
+            Text("SUBMIT")
+                .font(.title2)
+                .fontWeight(.medium)
+                .italic()
+                .foregroundColor(.black)
+                .frame(width: 150, height: 50)
+                .background(
+                    RoundedRectangle(cornerRadius: 40)
+                        .fill(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 40)
+                                .stroke(Color.black, lineWidth: 1)
+                        )
+                    
+                )
+                .padding(.bottom, 20)
+        }).navigationDestination(isPresented: $isSwiperViewActive) {
+            SwiperView(vm: vm)
+        }
+    }
 }
