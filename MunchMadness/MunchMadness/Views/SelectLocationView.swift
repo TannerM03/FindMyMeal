@@ -9,19 +9,24 @@ import SwiftUI
 import MapKit
 
 struct SelectLocationView: View {
+    @Environment(\.presentationMode) var presentationMode
+
     @State private var cameraPosition: MapCameraPosition = .region(.starterRegion)
     @State private var searchText = ""
     @State private var results: [MKMapItem] = []
     
     @State private var backToFilter: Bool = false
     
-    static var selectedLatitude: CLLocationDegrees = 40.7128
-    static var selectedLongitude: CLLocationDegrees = -74.0060
+    @Binding var selectedLatitude: CLLocationDegrees
+    @Binding var selectedLongitude: CLLocationDegrees
     
-    var onLocationSelected: ((CLLocationDegrees, CLLocationDegrees) -> Void)?
+    
+    @State private var onLocationSelected: ((CLLocationDegrees, CLLocationDegrees) -> Void)?
+    
+    @State private var swiperTime: Bool = false
     
     var body: some View {
-        NavigationStack {
+        NavigationView {
             Map(position: $cameraPosition) {
                 ForEach(results, id: \.self) { item in
                     let placemark = item.placemark
@@ -39,18 +44,22 @@ struct SelectLocationView: View {
                         .shadow(radius: 10)
                     Spacer()
                     //button that gets latitude and longitude, brings you back to the filters page
-                    Button {
+                    Button (action: {
+                        swiperTime.toggle()
+                        print("button clicked")
                         if let firstItem = results.first {
-                            if let onLocationSelected = onLocationSelected {
-                                onLocationSelected(firstItem.placemark.coordinate.latitude, firstItem.placemark.coordinate.longitude)
-                                SelectLocationView.selectedLongitude = firstItem.placemark.coordinate.longitude
-                                SelectLocationView.selectedLatitude = firstItem.placemark.coordinate.latitude
-                                print("Longitude: \(SelectLocationView.selectedLongitude)")
-                            }
+                            print("past first param")
+                            print("\(firstItem.placemark.coordinate.latitude)")
+                                selectedLongitude = firstItem.placemark.coordinate.longitude
+                                selectedLatitude = firstItem.placemark.coordinate.latitude
+                                print("Longitude: \(selectedLongitude)")
                         }
-                    } label: {
+                        presentationMode.wrappedValue.dismiss()
+                    }, label: {
                         Text("Submit")
-                    }.padding()
+                    })
+
+                    .padding()
                         .foregroundColor(.black)
                         .frame(width: 150, height: 60)
                         .background(
@@ -62,9 +71,8 @@ struct SelectLocationView: View {
                                 )
                             
                         )
-                        .navigationDestination(isPresented: $backToFilter) {
-                            FilterView(latitude: SelectLocationView.selectedLatitude, longitude: SelectLocationView.selectedLongitude, vm: RestaurantListViewModel(), locationManager: LocationManager())
-                        }
+                        .padding(.bottom, 20)
+
                 }
             }
             .onSubmit(of: .text) {
@@ -76,11 +84,11 @@ struct SelectLocationView: View {
                         }
                         var resultRegion: MKCoordinateRegion {
                             return .init(center: resultLocation,
-                                         latitudinalMeters: 50000, longitudinalMeters: 50000)
+                                         latitudinalMeters: 10000, longitudinalMeters: 10000)
                         }
                         cameraPosition = .region(resultRegion)
-                        SelectLocationView.selectedLatitude = firstItem.placemark.coordinate.latitude
-                        SelectLocationView.selectedLongitude = firstItem.placemark.coordinate.longitude
+                        selectedLatitude = firstItem.placemark.coordinate.latitude
+                        selectedLongitude = firstItem.placemark.coordinate.longitude
                         print("Latitude: \(firstItem.placemark.coordinate.latitude)")
                         print("Longitude: \(firstItem.placemark.coordinate.longitude)")
                         
@@ -107,7 +115,7 @@ extension SelectLocationView {
 
 extension CLLocationCoordinate2D {
     static var location: CLLocationCoordinate2D {
-        return .init(latitude: SelectLocationView.selectedLatitude, longitude: SelectLocationView.selectedLongitude)
+        return .init(latitude: 40.7128, longitude: -74.0060)
     }
 }
 
@@ -122,6 +130,6 @@ extension MKCoordinateRegion {
 }
 
 
-#Preview {
-    SelectLocationView()
-}
+//#Preview {
+//    SelectLocationView(selectedLatitude: 40.7128, selectedLongitude: -74.0060 )
+//}

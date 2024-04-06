@@ -15,7 +15,7 @@ struct HomeView: View {
         
         NavigationView {
             ZStack {
-                Color.backgroundMain
+                Color.uncBlue
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack {
