@@ -21,6 +21,7 @@ struct SelectLocationView: View {
     @Binding var selectedLongitude: CLLocationDegrees
     
     
+    
     @State private var onLocationSelected: ((CLLocationDegrees, CLLocationDegrees) -> Void)?
     
     @State private var swiperTime: Bool = false
