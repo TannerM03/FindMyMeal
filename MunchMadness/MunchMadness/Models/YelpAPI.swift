@@ -24,6 +24,7 @@ enum YelpService {
                 "radius": "\(radius)",
                 "open_now": "\(open_now)"
             ]
+        print("base url: \(baseURL)")
         var components = URLComponents(string: baseURL)!
         components.queryItems = parameters.map { URLQueryItem(name: $0.key, value: $0.value) }
 
@@ -75,7 +76,8 @@ enum YelpService {
                         let address1 = location["address1"] as? String,
                         let city = location["city"] as? String,
                         let displayPhone = business["display_phone"] as? String,
-                        let distance = business["distance"] as? Double {
+                        let distance = business["distance"] as? Double,
+                        let url = business["url"] as? String {
                                     
                         let restaurant = RestaurantViewModel(name: name,
                                                              isClosed: isClosed,
@@ -86,7 +88,8 @@ enum YelpService {
                                                              address1: address1,
                                                              city: city,
                                                              displayPhone: displayPhone,
-                                                             distance: distance)
+                                                             distance: distance,
+                                                             url: url)
                             
                         restaurantList.append(restaurant)
                         }
