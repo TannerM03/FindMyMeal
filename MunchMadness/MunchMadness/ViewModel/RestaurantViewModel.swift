@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct RestaurantViewModel: Codable {
+struct RestaurantViewModel: Codable, Equatable {
     
     var name: String
     var isClosed: Bool

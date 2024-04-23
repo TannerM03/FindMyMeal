@@ -18,6 +18,10 @@ struct SwiperView: View {
     @State private var topIndex = 0
     @State private var bottomIndex = 1
     @State private var rotationAngle: Double = 0
+    
+    @State private var restaurants: [RestaurantViewModel] = []
+    
+    
 
     
     var body: some View {
@@ -36,10 +40,10 @@ struct SwiperView: View {
                     .foregroundColor(.white)
             )
                 Spacer()
-                if vm.restaurants.isEmpty {
+                if restaurants.isEmpty {
                     Text("Loading restaurants...")
-                } else if vm.restaurants.count == 1 {
-                    CardView(restaurant: vm.restaurants[0])
+                } else if restaurants.count == 1 {
+                    CardView(restaurant: restaurants[0])
                         .rotationEffect(.degrees(rotationAngle))
                         .animation(.easeInOut(duration: 1.0))
                         .onAppear {
@@ -52,13 +56,13 @@ struct SwiperView: View {
                 }
                 else {
                     // current restaurant
-                    Text("Restaurants Remaining: \(vm.restaurants.count)")
+                    Text("Restaurants Remaining: \(restaurants.count)")
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(.white)
                         .shadow(color:.gray, radius: 5)
 
-                    CardView(restaurant: vm.restaurants[topIndex])
+                    CardView(restaurant: restaurants[topIndex])
                         .padding()
                         .offset(x: offset.width, y: offset.height * 0.4)
                         .rotationEffect(.degrees(Double(offset.width / 80)))
@@ -85,8 +89,8 @@ struct SwiperView: View {
                         .shadow(color:.gray, radius: 5)
                     
                     //next restaurant if available
-                    if bottomIndex < vm.restaurants.count && bottomIndex != topIndex {
-                        CardView(restaurant: vm.restaurants[bottomIndex])
+                    if bottomIndex < restaurants.count && bottomIndex != topIndex {
+                        CardView(restaurant: restaurants[bottomIndex])
                             .padding()
                             .offset(x: offsetTwo.width, y: offsetTwo.height * 0.4)
                             .rotationEffect(.degrees(Double(offsetTwo.width / 80)))
@@ -111,10 +115,13 @@ struct SwiperView: View {
                     }
                 }
             }
+        }.onChange(of: vm.restaurants) { newRestaurants in
+            // Update restaurants when vm.restaurants changes
+            if !newRestaurants.isEmpty {
+                restaurants = newRestaurants
+            }
         }
-        .onAppear {
-            vm.getPlaces(with: vm.term, longitude: vm.longitude, latitude: vm.latitude, radius: vm.radius, openNow: vm.openNow, prices: vm.prices)
-        }
+
     }
     
     private func SwipeCard(width: CGFloat) {
@@ -157,15 +164,15 @@ struct SwiperView: View {
     private func removeCurrentRestaurant() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             
-            if topIndex < vm.restaurants.count {
-                vm.restaurants.remove(at: topIndex)
+            if topIndex < restaurants.count {
+                restaurants.remove(at: topIndex)
                 if topIndex < bottomIndex {
                     bottomIndex = 0
                     topIndex = bottomIndex + 1
                 }
             }
             // Reset index if it exceeds the bounds of the array
-            if topIndex >= vm.restaurants.count {
+            if topIndex >= restaurants.count {
                 topIndex = 0
             }
         }
@@ -173,8 +180,8 @@ struct SwiperView: View {
     private func removeSecondRestaurant() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             
-            if bottomIndex < vm.restaurants.count {
-                vm.restaurants.remove(at: bottomIndex)
+            if bottomIndex < restaurants.count {
+                restaurants.remove(at: bottomIndex)
                 if bottomIndex < topIndex {
                     topIndex = 0
                     bottomIndex = topIndex + 1
@@ -182,7 +189,7 @@ struct SwiperView: View {
                 
             }
             // Reset index if it exceeds the bounds of the array
-            if bottomIndex >= vm.restaurants.count {
+            if bottomIndex >= restaurants.count {
                 bottomIndex = 0
             }
         }
