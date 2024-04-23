@@ -14,6 +14,7 @@ struct SelectLocationView: View {
     @State private var cameraPosition: MapCameraPosition = .region(.starterRegion)
     @State private var searchText = ""
     @State private var results: [MKMapItem] = []
+    @State private var showSubmit = false
     
     @State private var backToFilter: Bool = false
     
@@ -45,34 +46,37 @@ struct SelectLocationView: View {
                         .shadow(radius: 10)
                     Spacer()
                     //button that gets latitude and longitude, brings you back to the filters page
-                    Button (action: {
-                        swiperTime.toggle()
-                        print("button clicked")
-                        if let firstItem = results.first {
-                            print("past first param")
-                            print("\(firstItem.placemark.coordinate.latitude)")
-                                selectedLongitude = firstItem.placemark.coordinate.longitude
-                                selectedLatitude = firstItem.placemark.coordinate.latitude
-                                print("Longitude: \(selectedLongitude)")
-                        }
-                        presentationMode.wrappedValue.dismiss()
-                    }, label: {
-                        Text("Submit")
-                    })
+                    if searchText != "" {
+                        Button (action: {
+                            swiperTime.toggle()
+                            print("button clicked")
+                            if let firstItem = results.first {
+                                print("past first param")
+                                print("\(firstItem.placemark.coordinate.latitude)")
+                                    selectedLongitude = firstItem.placemark.coordinate.longitude
+                                    selectedLatitude = firstItem.placemark.coordinate.latitude
+                                    print("Longitude: \(selectedLongitude)")
+                            }
+                            presentationMode.wrappedValue.dismiss()
+                        }, label: {
+                            Text("Submit")
+                        })
 
-                    .padding()
-                        .foregroundColor(.black)
-                        .frame(width: 150, height: 60)
-                        .background(
-                            RoundedRectangle(cornerRadius: 40)
-                                .fill(Color.white)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 40)
-                                        .stroke(Color.black, lineWidth: 1)
-                                )
-                            
-                        )
-                        .padding(.bottom, 20)
+                        .padding()
+                            .foregroundColor(.black)
+                            .frame(width: 150, height: 60)
+                            .background(
+                                RoundedRectangle(cornerRadius: 40)
+                                    .fill(Color.white)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 40)
+                                            .stroke(Color.black, lineWidth: 1)
+                                    )
+                                
+                            )
+                            .padding(.bottom, 20)
+                    }
+                    
 
                 }
             }

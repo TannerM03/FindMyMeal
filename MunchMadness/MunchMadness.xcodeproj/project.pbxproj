@@ -27,6 +27,8 @@
 		E3BC341D2BAA07CC00FFBA53 /* RequestLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BC341C2BAA07CC00FFBA53 /* RequestLocationView.swift */; };
 		E3BE1A392BACF11600503F44 /* TabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BE1A382BACF11600503F44 /* TabsView.swift */; };
 		E3DB65442BBD10BA00DFB606 /* SelectLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DB65432BBD10BA00DFB606 /* SelectLocationView.swift */; };
+		E3DB658C2BC63DA400DFB606 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DB658B2BC63DA400DFB606 /* ImageView.swift */; };
+		E3DB658E2BC63DB900DFB606 /* ImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DB658D2BC63DB900DFB606 /* ImageViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +53,8 @@
 		E3BC341C2BAA07CC00FFBA53 /* RequestLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestLocationView.swift; sourceTree = "<group>"; };
 		E3BE1A382BACF11600503F44 /* TabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsView.swift; sourceTree = "<group>"; };
 		E3DB65432BBD10BA00DFB606 /* SelectLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectLocationView.swift; sourceTree = "<group>"; };
+		E3DB658B2BC63DA400DFB606 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
+		E3DB658D2BC63DB900DFB606 /* ImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				E3BC33FA2B9A7FF900FFBA53 /* RestaurantViewModel.swift */,
+				E3DB658D2BC63DB900DFB606 /* ImageViewModel.swift */,
 				E3BC340F2BA7539000FFBA53 /* RestaurantListViewModel.swift */,
 			);
 			path = ViewModel;
@@ -120,6 +125,7 @@
 			children = (
 				E3BE1A382BACF11600503F44 /* TabsView.swift */,
 				E3BC34062BA73E4F00FFBA53 /* CardView.swift */,
+				E3DB658B2BC63DA400DFB606 /* ImageView.swift */,
 				E3BC340B2BA74D0B00FFBA53 /* HomeView.swift */,
 				E3BC340D2BA74F3500FFBA53 /* SwiperView.swift */,
 				E3BC34112BA7A12E00FFBA53 /* ProfileView.swift */,
@@ -226,10 +232,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3BC34142BA7A13900FFBA53 /* FilterView.swift in Sources */,
+				E3DB658C2BC63DA400DFB606 /* ImageView.swift in Sources */,
 				E3BC341D2BAA07CC00FFBA53 /* RequestLocationView.swift in Sources */,
 				E3BC34182BA9D75F00FFBA53 /* Secret.swift in Sources */,
 				E3BC341B2BAA079000FFBA53 /* LocationManager.swift in Sources */,
 				E3BE1A392BACF11600503F44 /* TabsView.swift in Sources */,
+				E3DB658E2BC63DB900DFB606 /* ImageViewModel.swift in Sources */,
 				E3BC340E2BA74F3500FFBA53 /* SwiperView.swift in Sources */,
 				E3BC34072BA73E4F00FFBA53 /* CardView.swift in Sources */,
 				E3BC34102BA7539100FFBA53 /* RestaurantListViewModel.swift in Sources */,
