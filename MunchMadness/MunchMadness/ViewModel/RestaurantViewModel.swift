@@ -10,6 +10,7 @@ import Foundation
 
 struct RestaurantViewModel: Codable, Equatable {
     
+    var id: String
     var name: String
     var isClosed: Bool
     var reviewCount: Int

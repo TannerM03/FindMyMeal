@@ -67,6 +67,7 @@ enum YelpService {
                 
                 for business in businesses {
                     if let name = business["name"] as? String,
+                       let id = business["id"] as? String,
                         let isClosed = business["is_closed"] as? Bool,
                         let reviewCount = business["review_count"] as? Int,
                         let imageUrl = business["image_url"] as? String,
@@ -79,7 +80,8 @@ enum YelpService {
                         let distance = business["distance"] as? Double,
                         let url = business["url"] as? String {
                                     
-                        let restaurant = RestaurantViewModel(name: name,
+                        let restaurant = RestaurantViewModel(id: id,
+                                                             name: name,
                                                              isClosed: isClosed,
                                                              reviewCount: reviewCount,
                                                              imageUrl: imageUrl,

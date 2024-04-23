@@ -21,7 +21,6 @@ struct SwiperView: View {
     
     @State private var restaurants: [RestaurantViewModel] = []
     
-    
 
     
     var body: some View {
@@ -52,6 +51,12 @@ struct SwiperView: View {
                                 rotationAngle += 720 // Rotate one full circle
                             }
                         }
+                    NavigationLink {
+                        ProfileView(restaurant: restaurants[0])
+                    }label: {
+                        Text("Add to favorites?")
+                    }
+
                     Spacer()
                 }
                 else {
@@ -81,12 +86,14 @@ struct SwiperView: View {
                                 }
                             
                         )
-                    Text("VS")
-                        .font(.title)
-                        .italic()
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .shadow(color:.gray, radius: 5)
+                    if restaurants.count != 1 {
+                        Text("VS")
+                            .font(.title)
+                            .italic()
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                            .shadow(color:.gray, radius: 5)
+                    }
                     
                     //next restaurant if available
                     if bottomIndex < restaurants.count && bottomIndex != topIndex {
@@ -110,8 +117,6 @@ struct SwiperView: View {
                                 
                             )
                         Spacer()
-                    } else {
-                        //make an animnation here for the winner at currentIndex
                     }
                 }
             }
@@ -194,6 +199,7 @@ struct SwiperView: View {
             }
         }
     }
+
 }
 
 

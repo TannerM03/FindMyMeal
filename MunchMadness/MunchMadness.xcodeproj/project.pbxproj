@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E34BAD1C2BD8077C0002D7BA /* DataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E34BAD1B2BD8077C0002D7BA /* DataItem.swift */; };
 		E3BC33ED2B9A7FE700FFBA53 /* MunchMadnessApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BC33EC2B9A7FE700FFBA53 /* MunchMadnessApp.swift */; };
 		E3BC33EF2B9A7FE700FFBA53 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BC33EE2B9A7FE700FFBA53 /* ContentView.swift */; };
 		E3BC33F12B9A7FE900FFBA53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3BC33F02B9A7FE900FFBA53 /* Assets.xcassets */; };
@@ -32,6 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E34BAD1B2BD8077C0002D7BA /* DataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataItem.swift; sourceTree = "<group>"; };
 		E3BC33E92B9A7FE700FFBA53 /* MunchMadness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MunchMadness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3BC33EC2B9A7FE700FFBA53 /* MunchMadnessApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MunchMadnessApp.swift; sourceTree = "<group>"; };
 		E3BC33EE2B9A7FE700FFBA53 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -68,6 +70,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E34BAD1A2BD807630002D7BA /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				E34BAD1B2BD8077C0002D7BA /* DataItem.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
 		E3BC33E02B9A7FE700FFBA53 = {
 			isa = PBXGroup;
 			children = (
@@ -87,9 +97,9 @@
 		E3BC33EB2B9A7FE700FFBA53 /* MunchMadness */ = {
 			isa = PBXGroup;
 			children = (
-				E3E1D6A92BB51A6E00B3C6D8 /* Fonts */,
 				E3BC33EC2B9A7FE700FFBA53 /* MunchMadnessApp.swift */,
 				E3BC33EE2B9A7FE700FFBA53 /* ContentView.swift */,
+				E34BAD1A2BD807630002D7BA /* Data */,
 				E3BC34032B9BEB3E00FFBA53 /* Views */,
 				E3BC34022B9B988400FFBA53 /* ViewModel */,
 				E3BC34082BA73FDB00FFBA53 /* Models */,
@@ -152,13 +162,6 @@
 				E3BC341C2BAA07CC00FFBA53 /* RequestLocationView.swift */,
 			);
 			path = Location;
-			sourceTree = "<group>";
-		};
-		E3E1D6A92BB51A6E00B3C6D8 /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -232,6 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3BC34142BA7A13900FFBA53 /* FilterView.swift in Sources */,
+				E34BAD1C2BD8077C0002D7BA /* DataItem.swift in Sources */,
 				E3DB658C2BC63DA400DFB606 /* ImageView.swift in Sources */,
 				E3BC341D2BAA07CC00FFBA53 /* RequestLocationView.swift in Sources */,
 				E3BC34182BA9D75F00FFBA53 /* Secret.swift in Sources */,
