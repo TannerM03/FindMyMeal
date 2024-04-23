@@ -33,6 +33,9 @@ struct FilterView: View {
     
     @State private var mapView: Bool = false
     
+    @State private var selectLocationPressed = false
+    @State private var useMyLocationPressed = false
+    
     var body: some View {
         
         NavigationStack {
@@ -55,9 +58,9 @@ struct FilterView: View {
                     
                     //add the ability to set location
                     HStack {
-                        UserLocationBtn(locationManager: locationManager, latitude: $latitude, longitude: $longitude, usingPersonalLocation: $usingPersonalLocation)
+                        UserLocationBtn(locationManager: locationManager, latitude: $latitude, longitude: $longitude, usingPersonalLocation: $usingPersonalLocation, selectLocationPressed: $selectLocationPressed, useMyLocationPressed: $useMyLocationPressed)
                         
-                        SelectLocationBtn(usingPersonalLocation: $usingPersonalLocation, mapView: $mapView, selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude)
+                        SelectLocationBtn(usingPersonalLocation: $usingPersonalLocation, mapView: $mapView, selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude, selectLocationPressed: $selectLocationPressed, useMyLocationPressed: $useMyLocationPressed)
                         
                     }
                     .padding(.bottom, 30)
@@ -210,9 +213,14 @@ struct SelectLocationBtn: View {
     @Binding var mapView: Bool
     @Binding var selectedLatitude: CLLocationDegrees
     @Binding var selectedLongitude: CLLocationDegrees
+    @Binding var selectLocationPressed: Bool
+    @Binding var useMyLocationPressed: Bool
+    
     var body: some View {
         Button {
             usingPersonalLocation = false
+            selectLocationPressed = true
+            useMyLocationPressed = false
             mapView.toggle()
         } label: {
             VStack {
@@ -220,12 +228,13 @@ struct SelectLocationBtn: View {
                 Text("LOCATION")
             }.font(.headline)
                 .italic()
+                .foregroundColor(selectLocationPressed ? Color.white : Color.darkerblue)
         }.padding()
             .foregroundColor(.black)
             .frame(width: 150, height: 60)
             .background(
                 RoundedRectangle(cornerRadius: 40)
-                    .fill(Color.white)
+                    .fill(selectLocationPressed ? Color.darkerblue : Color.white)
                     .overlay(
                         RoundedRectangle(cornerRadius: 40)
                             .stroke(Color.black, lineWidth: 1)
@@ -242,6 +251,8 @@ struct UserLocationBtn: View {
     @Binding var latitude: CLLocationDegrees
     @Binding var longitude: CLLocationDegrees
     @Binding var usingPersonalLocation: Bool
+    @Binding var selectLocationPressed: Bool
+    @Binding var useMyLocationPressed: Bool
     var body: some View {
         Button {
             Task {
@@ -264,19 +275,22 @@ struct UserLocationBtn: View {
                     print("User location not available")
                 }
             }
+            selectLocationPressed = false
+            useMyLocationPressed = true
         } label: {
             VStack {
                 Text("USE MY")
                 Text("LOCATION")
             }.font(.headline)
                 .italic()
+                .foregroundColor(useMyLocationPressed ? Color.white : Color.darkerblue)
             
         }.padding()
             .foregroundColor(.black)
             .frame(width: 150, height: 60)
             .background(
                 RoundedRectangle(cornerRadius: 40)
-                    .fill(Color.white)
+                    .fill(useMyLocationPressed ? Color.darkerblue : Color.white)
                     .overlay(
                         RoundedRectangle(cornerRadius: 40)
                             .stroke(Color.black, lineWidth: 1)

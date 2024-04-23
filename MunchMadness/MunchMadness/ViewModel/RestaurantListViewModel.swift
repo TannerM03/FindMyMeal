@@ -48,6 +48,8 @@ class RestaurantListViewModel: ObservableObject {
                     print("getRestaurants --> Latitude: \(latitude)Longitude: \(longitude)category: \(self.category)limit: \(self.limit)term: \(term)price: \(prices)radius: \(radius) isOpen: \(openNow)")
                     print("Fetched \(restaurants.count) restaurants")
                 }
+            } else {
+                print("maybe this is what's wrong?")
             }
         }
             

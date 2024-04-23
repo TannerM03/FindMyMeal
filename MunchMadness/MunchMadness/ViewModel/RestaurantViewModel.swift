@@ -8,18 +8,19 @@
 
 import Foundation
 
-struct RestaurantViewModel: Codable {
+struct RestaurantViewModel: Codable, Equatable {
     
-    var name: String?
-    var isClosed: Bool?
-    var reviewCount: Int?
-    var imageUrl: String?
-    var rating: Double?
-    var price: String?
-    var address1: String?
-    var city: String?
-    var displayPhone: String?
-    var distance: Double?
+    var name: String
+    var isClosed: Bool
+    var reviewCount: Int
+    var imageUrl: String
+    var rating: Double
+    var price: String
+    var address1: String
+    var city: String
+    var displayPhone: String
+    var distance: Double
+    var url: String
     
 }
 
