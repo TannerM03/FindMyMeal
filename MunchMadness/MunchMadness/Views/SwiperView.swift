@@ -115,7 +115,7 @@ struct SwiperView: View {
                     }
                 }
             }
-        }.onChange(of: vm.restaurants) { newRestaurants in
+        }.onChange(of: vm.restaurants, initial: true) { oldRestaurants, newRestaurants in
             // Update restaurants when vm.restaurants changes
             if !newRestaurants.isEmpty {
                 restaurants = newRestaurants
