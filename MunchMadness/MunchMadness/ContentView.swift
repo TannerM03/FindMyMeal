@@ -9,18 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var locationManager = LocationManager()
+    @State private var tab = "1"
     
     var body: some View {
         if locationManager.hasLocationAccess {
-            TabsView(locationManager: locationManager)
+            TabsView(selectedTab: $tab)
         } else {
             RequestLocationAccessView(locationManager: locationManager)
         }
     }
 }
 
-//keep using comments to figure out why it's not fetching any restaurants
-//You're close!!
 
 #Preview {
     ContentView()

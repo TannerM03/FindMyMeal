@@ -9,9 +9,9 @@ import SwiftUI
 import CoreLocation
 
 struct TabsView: View {
-    @State private var selectedTab = "1"
-    @ObservedObject var locationManager: LocationManager
-
+    @Binding var selectedTab: String
+    @State var savedRestaurant: RestaurantViewModel?
+    
     
     var body: some View {
         
@@ -22,12 +22,12 @@ struct TabsView: View {
                 Text("Home")
             }
                 .tag("1")
-            FilterView(latitude: 34.149401, longitude: -77.862974, vm: RestaurantListViewModel(), locationManager: LocationManager())
+            FilterView(latitude: 34.149401, longitude: -77.862974, vm: RestaurantListViewModel(), locationManager: LocationManager(), selectedTab: $selectedTab, savedRestaurant: $savedRestaurant)
                 .tabItem {
                     Label("Filters", systemImage: "menucard.fill")
                 }
                 .tag("2")
-            ProfileView()
+            ProfileView(restaurant: $savedRestaurant, selectedTab: $selectedTab)
                 .tabItem {
                     Label("Profile", systemImage: "book.fill")
                 }
@@ -39,6 +39,6 @@ struct TabsView: View {
     }
 }
 
-#Preview {
-    TabsView(locationManager: LocationManager())
-}
+//#Preview {
+//    TabsView(locationManager: LocationManager())
+//}

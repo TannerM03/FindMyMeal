@@ -13,16 +13,60 @@ struct ProfileView: View {
     @Environment(\.modelContext) private var context
     @Query private var items: [DataItem]
     
-    @State var restaurant: RestaurantViewModel?
+    @Binding var restaurant: RestaurantViewModel?
+    
+    
+    @State private var isSheetShowing: Bool = false
+    
+    @State private var selectedItem: DataItem?
+    
+    @Binding var selectedTab: String
     
     var body: some View {
         ZStack {
-            List {
-                ForEach (items) { item in
-                    Text(item.name)
-                }.onDelete { indexes in
-                    for index in indexes {
-                        deleteItem(items[index])
+            VStack {
+                Text("Favorites")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.vertical, 20)
+                List() {
+                    ForEach (items) { item in
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(item.name)
+                                Text("\(item.city), \(item.state ?? "")")
+                                    .font(.footnote)
+                            }
+                            Spacer()
+                            ImageView(urlString: item.imageUrl)
+                                .frame(width: 50, height: 36)
+                                .cornerRadius(5)
+                                .padding(.trailing, 10)
+                        }.onTapGesture {
+                            selectedItem = item
+                        }.sheet(item: $selectedItem) { selectedItem in
+                            VStack {
+                                Text(selectedItem.name)
+                                    .font(.largeTitle)
+                                    .fontWeight(.bold)
+                                Text("\(selectedItem.city), \(selectedItem.state ?? "")")
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                Text(selectedItem.price)
+                                    .font(.callout)
+                                    .fontWeight(.medium)
+                                ImageView(urlString: selectedItem.imageUrl)
+                                    .frame(width: 200, height: 175)
+                                    .cornerRadius(5)
+                                    .padding(.trailing, 10)
+                            }
+                        }
+                        
+                        
+                    }.onDelete { indexes in
+                        for index in indexes {
+                            deleteItem(items[index])
+                        }
                     }
                 }
             }
@@ -33,7 +77,9 @@ struct ProfileView: View {
     }
     func addItem() {
         if let restaurant = restaurant {
-            let item = DataItem(id: restaurant.id, name: restaurant.name, isClosed: restaurant.isClosed, reviewCount: restaurant.reviewCount, imageUrl: restaurant.imageUrl, rating: restaurant.rating, price: restaurant.price, address1: restaurant.address1, city: restaurant.city, displayPhone: restaurant.displayPhone, distance: restaurant.distance, url: restaurant.url)
+            print("\(restaurant.state)")
+            let item = DataItem(id: restaurant.id, name: restaurant.name, isClosed: restaurant.isClosed, reviewCount: restaurant.reviewCount, imageUrl: restaurant.imageUrl, rating: restaurant.rating, price: restaurant.price, address1: restaurant.address1, city: restaurant.city, state: restaurant.state ?? "", displayPhone: restaurant.displayPhone, distance: restaurant.distance, url: restaurant.url)
+                
             if items.contains(where: {$0.id == item.id}) {
                 print("already contains this resaurant")
             } else {
@@ -50,5 +96,5 @@ struct ProfileView: View {
 }
 
 //#Preview {
-//    ProfileView(restaurant: RestaurantViewModel())
+//    ProfileView(restaurant: RestaurantViewModel.example)
 //}

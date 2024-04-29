@@ -76,6 +76,7 @@ enum YelpService {
                         let location = business["location"] as? [String: Any],
                         let address1 = location["address1"] as? String,
                         let city = location["city"] as? String,
+                        let state = location["state"] as? String,
                         let displayPhone = business["display_phone"] as? String,
                         let distance = business["distance"] as? Double,
                         let url = business["url"] as? String {
@@ -89,10 +90,10 @@ enum YelpService {
                                                              price: price,
                                                              address1: address1,
                                                              city: city,
+                                                             state: state,
                                                              displayPhone: displayPhone,
                                                              distance: distance,
-                                                             url: url)
-                            
+                                                             url: url)                            
                         restaurantList.append(restaurant)
                         }
                 }

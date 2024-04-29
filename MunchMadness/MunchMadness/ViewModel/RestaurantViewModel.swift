@@ -19,6 +19,7 @@ struct RestaurantViewModel: Codable, Equatable {
     var price: String
     var address1: String
     var city: String
+    var state: String?
     var displayPhone: String
     var distance: Double
     var url: String

@@ -36,6 +36,13 @@ struct FilterView: View {
     @State private var selectLocationPressed = false
     @State private var useMyLocationPressed = false
     
+    @State private var isNewSearch = false
+    
+    @Binding var selectedTab: String
+    
+    @Binding var savedRestaurant: RestaurantViewModel?
+    
+            
     var body: some View {
         
         NavigationStack {
@@ -115,7 +122,7 @@ struct FilterView: View {
                         .padding(.bottom, 20)
                     
                     //submit button that takes you to SwiperView()
-                    SubmitBtn(distance: $distance, userMood: $userMood, prices: $prices, usingPersonalLocation: $usingPersonalLocation, radius: $radius, isSwiperViewActive: $isSwiperViewActive, isOpen: $isOpen, latitude: $latitude, longitude: $longitude, selectedLongitude: $selectedLongitude, selectedLatitude: $selectedLatitude)
+                    SubmitBtn(distance: $distance, userMood: $userMood, prices: $prices, usingPersonalLocation: $usingPersonalLocation, radius: $radius, isSwiperViewActive: $isSwiperViewActive, isOpen: $isOpen, latitude: $latitude, longitude: $longitude, selectedLongitude: $selectedLongitude, selectedLatitude: $selectedLatitude, isNewSearch: $isNewSearch, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant)
                     
                     Spacer()
                 }
@@ -132,9 +139,9 @@ struct FilterView: View {
 
 
 
-#Preview {
-    FilterView(latitude: 40.7128, longitude: -74.0060, vm: RestaurantListViewModel(), locationManager: LocationManager())
-}
+//#Preview {
+//    FilterView(latitude: 40.7128, longitude: -74.0060, vm: RestaurantListViewModel(), locationManager: LocationManager())
+//}
 
 struct PricesFilter: View {
     @Binding var prices: [Int]
@@ -313,10 +320,19 @@ struct SubmitBtn: View {
     @Binding var selectedLongitude: CLLocationDegrees
     @Binding var selectedLatitude: CLLocationDegrees
     @ObservedObject var vm = RestaurantListViewModel()
+    @Binding var isNewSearch: Bool
+    @Binding var selectedTab: String
+    
+    @Binding var savedRestaurant: RestaurantViewModel?
+
 
     var body: some View {
+
+        @State var profile = false
+        
         Button(action: {
-            radius = distance * 1609
+            isNewSearch = true
+            radius = distance * 1600
             vm.term = userMood
             vm.prices = prices
             if usingPersonalLocation == true {
@@ -347,7 +363,7 @@ struct SubmitBtn: View {
                 )
                 .padding(.bottom, 20)
         }).navigationDestination(isPresented: $isSwiperViewActive) {
-            SwiperView(vm: vm)
+            SwiperView(vm: vm, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant)
         }
     }
 }

@@ -8,7 +8,6 @@
 import SwiftUI
 
 
-//returns 2 less than what the limit is set at
 struct SwiperView: View {
     @ObservedObject var vm: RestaurantListViewModel
     
@@ -18,8 +17,17 @@ struct SwiperView: View {
     @State private var topIndex = 0
     @State private var bottomIndex = 1
     @State private var rotationAngle: Double = 0
-    
+        
     @State private var restaurants: [RestaurantViewModel] = []
+    @State private var tab = "3"
+    
+    @Binding var selectedTab: String
+    
+    @Binding var savedRestaurant: RestaurantViewModel?
+    
+//    @Binding var isNewSearch: Bool
+    
+//    @State private var winner: RestaurantViewModel?
     
 
     
@@ -51,14 +59,29 @@ struct SwiperView: View {
                                 rotationAngle += 720 // Rotate one full circle
                             }
                         }
-                    NavigationLink {
-                        ProfileView(restaurant: restaurants[0])
+                    Button {
+                        savedRestaurant = restaurants[0]
+                        selectedTab = "3"
+//                        ProfileView(restaurant: restaurants[0], selectedTab: $selectedTab)
+//                        ProfileView(restaurant: restaurants[0])
                     }label: {
-                        Text("Add to favorites?")
+                        Text("Click to add to favorites")
+                            .padding()
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .background(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .fill(.white)
+                                    .shadow(radius: 2)
+                            )
                     }
+                    .padding(.top, 40)
 
                     Spacer()
-                }
+                } 
+//                else if isNewSearch == false {
+//                    CardView(restaurant: winner ?? restaurants[0])
+//                }
                 else {
                     // current restaurant
                     Text("Restaurants Remaining: \(restaurants.count)")
@@ -130,6 +153,7 @@ struct SwiperView: View {
     }
     
     private func SwipeCard(width: CGFloat) {
+//        isNewSearch = false
         withAnimation(.easeInOut(duration: 0.2)) {
             switch width {
             case -500...(-120):
@@ -148,6 +172,7 @@ struct SwiperView: View {
         
     }
     private func SwipeSecondCard(width: CGFloat) {
+//        isNewSearch = false
         withAnimation(.easeInOut(duration: 0.2)) {
             switch width {
             case -500...(-120):
@@ -180,6 +205,9 @@ struct SwiperView: View {
             if topIndex >= restaurants.count {
                 topIndex = 0
             }
+//            if restaurants.count == 1 {
+//                winner = restaurants[0]
+//            }
         }
     }
     private func removeSecondRestaurant() {
@@ -197,12 +225,15 @@ struct SwiperView: View {
             if bottomIndex >= restaurants.count {
                 bottomIndex = 0
             }
+//            if restaurants.count == 1 {
+//                winner = restaurants[0]
+//            }
         }
     }
 
 }
 
-
-#Preview {
-    SwiperView(vm: RestaurantListViewModel())
-}
+//
+//#Preview {
+//    SwiperView(vm: RestaurantListViewModel(), isNewSearch: true)
+//}
