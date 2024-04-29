@@ -23,12 +23,14 @@ struct ProfileView: View {
     @Binding var selectedTab: String
     
     var body: some View {
+        
         ZStack {
             VStack {
                 Text("Favorites")
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                    .padding(.vertical, 20)
+                    .italic()
+                    .foregroundStyle(.darkerblue)
                 List() {
                     ForEach (items) { item in
                         HStack {
@@ -68,7 +70,9 @@ struct ProfileView: View {
                             deleteItem(items[index])
                         }
                     }
-                }
+                }.scrollContentBackground(.hidden)
+                    .background(Color.uncBlue)
+                    .padding(.top, -7)
             }
             
         }.onAppear {

@@ -18,12 +18,14 @@ struct SwiperView: View {
     @State private var bottomIndex = 1
     @State private var rotationAngle: Double = 0
         
-    @State private var restaurants: [RestaurantViewModel] = []
     @State private var tab = "3"
     
     @Binding var selectedTab: String
     
     @Binding var savedRestaurant: RestaurantViewModel?
+    
+    @Binding var restaurants: [RestaurantViewModel]
+
     
 //    @Binding var isNewSearch: Bool
     
@@ -62,8 +64,6 @@ struct SwiperView: View {
                     Button {
                         savedRestaurant = restaurants[0]
                         selectedTab = "3"
-//                        ProfileView(restaurant: restaurants[0], selectedTab: $selectedTab)
-//                        ProfileView(restaurant: restaurants[0])
                     }label: {
                         Text("Click to add to favorites")
                             .padding()
@@ -79,9 +79,7 @@ struct SwiperView: View {
 
                     Spacer()
                 } 
-//                else if isNewSearch == false {
-//                    CardView(restaurant: winner ?? restaurants[0])
-//                }
+
                 else {
                     // current restaurant
                     Text("Restaurants Remaining: \(restaurants.count)")
@@ -150,6 +148,10 @@ struct SwiperView: View {
             }
         }
 
+    }
+    
+    private func setRestaurant() {
+        restaurants = [restaurants[0]]
     }
     
     private func SwipeCard(width: CGFloat) {

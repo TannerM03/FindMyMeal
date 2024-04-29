@@ -42,6 +42,9 @@ struct FilterView: View {
     
     @Binding var savedRestaurant: RestaurantViewModel?
     
+    @State var restaurants: [RestaurantViewModel] = []
+
+    
             
     var body: some View {
         
@@ -122,7 +125,7 @@ struct FilterView: View {
                         .padding(.bottom, 20)
                     
                     //submit button that takes you to SwiperView()
-                    SubmitBtn(distance: $distance, userMood: $userMood, prices: $prices, usingPersonalLocation: $usingPersonalLocation, radius: $radius, isSwiperViewActive: $isSwiperViewActive, isOpen: $isOpen, latitude: $latitude, longitude: $longitude, selectedLongitude: $selectedLongitude, selectedLatitude: $selectedLatitude, isNewSearch: $isNewSearch, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant)
+                    SubmitBtn(distance: $distance, userMood: $userMood, prices: $prices, usingPersonalLocation: $usingPersonalLocation, radius: $radius, isSwiperViewActive: $isSwiperViewActive, isOpen: $isOpen, latitude: $latitude, longitude: $longitude, selectedLongitude: $selectedLongitude, selectedLatitude: $selectedLatitude, isNewSearch: $isNewSearch, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant, restaurants: $restaurants)
                     
                     Spacer()
                 }
@@ -324,6 +327,7 @@ struct SubmitBtn: View {
     @Binding var selectedTab: String
     
     @Binding var savedRestaurant: RestaurantViewModel?
+    @Binding var restaurants: [RestaurantViewModel]
 
 
     var body: some View {
@@ -363,7 +367,7 @@ struct SubmitBtn: View {
                 )
                 .padding(.bottom, 20)
         }).navigationDestination(isPresented: $isSwiperViewActive) {
-            SwiperView(vm: vm, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant)
+            SwiperView(vm: vm, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant, restaurants: $restaurants)
         }
     }
 }
