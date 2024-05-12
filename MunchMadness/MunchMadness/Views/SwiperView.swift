@@ -64,6 +64,7 @@ struct SwiperView: View {
                     Button {
                         savedRestaurant = restaurants[0]
                         selectedTab = "3"
+                        print("clicked favorites button")
                     }label: {
                         Text("Click to add to favorites")
                             .padding()

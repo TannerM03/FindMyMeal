@@ -24,10 +24,10 @@ class DataItem: Identifiable{
     var displayPhone: String
     var distance: Double
     var url: String
-//    var yelpUrl: URL
-//    var mapsUrl: URL
+    var userNotes: String?
+    var editedNotes: String?
     
-    init(id: String, name: String, isClosed: Bool, reviewCount: Int, imageUrl: String, rating: Double, price: String, address1: String, city: String, state: String, displayPhone: String, distance: Double, url: String) {
+    init(id: String, name: String, isClosed: Bool, reviewCount: Int, imageUrl: String, rating: Double, price: String, address1: String, city: String, state: String, displayPhone: String, distance: Double, url: String, userNotes: String? = nil, editedNotes: String = ""){
         self.id = id
         self.name = name
         self.isClosed = isClosed
@@ -41,8 +41,7 @@ class DataItem: Identifiable{
         self.displayPhone = displayPhone
         self.distance = distance
         self.url = url
-//        self.yelpUrl = URL(string: url) ?? URL(string: "https://www.yelp.com")!
-//        self.mapsUrl = URL(string: "http://maps.apple.com/?address=\(String(describing: address1))+\(city)") ?? URL(string: "http://maps.apple.com")!
-//        
+        self.userNotes = userNotes
+        self.editedNotes = editedNotes
     }
 }

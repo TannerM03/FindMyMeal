@@ -21,6 +21,9 @@ struct ProfileView: View {
     @State private var selectedItem: DataItem?
     
     @Binding var selectedTab: String
+    
+    @State private var editedNotes: String = ""
+    @State private var openEditor: Bool = false
         
     var body: some View {
         
@@ -46,15 +49,13 @@ struct ProfileView: View {
                                 .padding(.trailing, 10)
                         }.onTapGesture {
                             selectedItem = item
+                            editedNotes = selectedItem!.userNotes ?? ""
                         }.sheet(item: $selectedItem) { selectedItem in
                             ZStack {
                                 Color.uncBlue.ignoresSafeArea()
                                 VStack {
-//                                    Text(selectedItem.isClosed ? "Closed" : "Open")
-//                                        .fontWeight(.semibold)
-//                                        .foregroundColor(selectedItem.isClosed ? Color.red : Color.green)
                                     Text(selectedItem.name)
-                                        .font(.largeTitle)
+                                        .font(.title)
                                         .fontWeight(.bold)
                                         .multilineTextAlignment(.center)
                                         .padding(.horizontal, 15)
@@ -145,45 +146,129 @@ struct ProfileView: View {
                                         .padding(4)
                                         .background(Color.white)
                                         .shadow(radius: 5)
-                                        .padding(.bottom, 10)
-
+                                        .padding(.bottom, 7)
+                                    
+                                    Text("\(selectedItem.city), \(selectedItem.state ?? "")")
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                        .multilineTextAlignment(.center)
+                                        .padding(5)
+                                        .background {
+                                            UnevenRoundedRectangle(topLeadingRadius: 10, topTrailingRadius: 10)
+                                                .fill(.white)
+                                        }.padding(.bottom, -3)
+                                    
                                     HStack {
                                         Image(systemName: "star.fill")
                                             .foregroundStyle(.yellow)
-                                        Text(String(format: "%.1f", item.rating))
+                                        Text(String(format: "%.1f", selectedItem.rating))
                                             .fontWeight(.semibold)
-                                        Text("(\(item.reviewCount)) on Yelp")
+                                        Text("(\(selectedItem.reviewCount)) on Yelp")
                                             .foregroundColor(.secondary)
                                             .font(.subheadline)
                                             .foregroundColor(.secondary)
                                         Text("*")
-                                        Text("\(item.price)")
+                                        Text("\(selectedItem.price)")
 
                                     }.font(.subheadline)
                                         .padding(10)
                                         .background {
                                             RoundedRectangle(cornerRadius: 10)
                                                 .fill(.white)
-                                        }.padding(.bottom, 5)
+                                        }
                                     
-                                Text("\(selectedItem.city), \(selectedItem.state ?? "")")
-                                    .font(.subheadline)
-                                    .fontWeight(.semibold)
-                                    .multilineTextAlignment(.center)
-                                    .padding(5)
-                                    .background {
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .fill(.white)
-                                    }.padding(.bottom, 15)
-               
-                                    Text("My Notes")
-                                        .font(.title3)
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .fill(.white)
-                                        .frame(width: 300, height: 75)
+                                
+                                    HStack(alignment: .center) {
+                                        Spacer()
+                                        VStack() {
+                                            Text("My Notes")
+                                                .foregroundStyle(Color.white)
+                                                .font(.title3)
+                                                .padding(.bottom, 5)
+                                                .padding(.top, 10)
+                                                .fontWeight(.semibold)
+                                                .shadow(color: .black, radius: 2)
+                                        }
+                                        Spacer()
+                                            .overlay {
+                                                Button {
+                                                    openEditor = true
+                                                } label: {
+                                                    Circle()
+                                                        .frame(width: 25, height: 25)
+                                                        .foregroundStyle(.black)
+                                                        .overlay(
+                                                            Circle()
+                                                                .frame(width: 22, height: 22)
+                                                                .foregroundStyle(Color.white)
+                                                            
+                                                                .overlay(
+                                                                    Image(systemName: "pencil")
+                                                                        .foregroundStyle(Color.green)
+                                                                        .fontWeight(.semibold)
+                                                                        .font(.footnote)
+                                                                )
+                                                        )
+                                                    
+                                                }.padding(.leading, 15)
+                                                    .padding(.top, 8)
+                                            }
+                                    }
+                                                
+                                    
+                                    Text(selectedItem.userNotes ?? "")
+                                        .multilineTextAlignment(.leading)
+                                        .padding(10)
+                                        .frame(width: 300, height: 120, alignment: .topLeading)
+                                        .background {
+                                            RoundedRectangle(cornerRadius: 20)
+                                                .stroke(Color.black, lineWidth: 1)
+                                                .fill(Color.white)
+                                        }
+ 
+
                                     Spacer()
                                 }.padding(.horizontal, 20)
+                                if openEditor {
+                                    Color.black.opacity(0.3).edgesIgnoringSafeArea(.all)
+                                                
+                                    VStack {
+                                        Text("Edit Notes")
+                                            .font(.title)
+                                            .padding()
+                                                    
+                                            TextEditor(text: $editedNotes)
+                                                .frame(width: 300, height: 120)
+                                                .padding()
+                                                .background {
+                                                    RoundedRectangle(cornerRadius: 20)
+                                                        .stroke(Color.black, lineWidth: 1)
+                                                }
+                                                    
+                                            Button {
+                                                selectedItem.userNotes = editedNotes
+                                                do {
+                                                    try context.save()
+                                                } catch {
+                                                    print("rip")
+                                                }
+                                                openEditor = false
+                                            } label: {
+                                                Text("Save")
+                                                    .fontWeight(.semibold)
+                                                    .foregroundStyle(Color.white)
+                                                    .padding(.vertical, 8)
+                                                    .frame(maxWidth: .infinity)
+                                                    .background(Color.green)
+                                            }.padding(.top, 15)
+                                        
+                                    }
+                                    .background(Color.white)
+                                    .cornerRadius(20)
+                                    .padding()
+                                }
                             }
+                            
                         }
                         
                         
@@ -213,13 +298,22 @@ struct ProfileView: View {
             }
         }
         
+        
         print(context)
     }
     func deleteItem(_ item: DataItem) {
         context.delete(item)
+    }
+    func saveNotes(item: DataItem) {
+        do {
+            try context.save()
+        } catch {
+            print("rip")
+        }
     }
 }
 
 //#Preview {
 //    ProfileView(restaurant: RestaurantViewModel.example, selectedTab: $selectedTab)
 //}
+//
