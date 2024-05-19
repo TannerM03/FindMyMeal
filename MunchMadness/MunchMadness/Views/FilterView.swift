@@ -10,7 +10,7 @@ import CoreLocation
 
 struct FilterView: View {
 
-    @State private var distance = 0
+    @State private var distance = 5
     @State private var radius = 0
     
     @State private var prices: [Int] = []
