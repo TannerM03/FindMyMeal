@@ -29,16 +29,23 @@ class RestaurantListViewModel: ObservableObject {
     @Published var errorMessage: String = ""
     @Published var isLoading: Bool = false
   
-    func getPlaces(with term: String, longitude: CLLocationDegrees, latitude: CLLocationDegrees, radius: Int, openNow: Bool, prices: [Int]) {
+    func getPlaces(with term: String, longitude: CLLocationDegrees, latitude: CLLocationDegrees, radius: Int, openNow: Bool, prices: [Int]) -> [RestaurantViewModel] {
         self.term = term
         self.longitude = longitude
         self.latitude = latitude
         self.radius = radius
         self.openNow = openNow
         self.prices = prices
+        var fetchedRestaurants: [RestaurantViewModel] = []
+
+        let semaphore = DispatchSemaphore(value: 0)
+
         
 
         YelpService.getRestaurants(latitude: latitude, longitude: longitude, category: category, limit: limit, term: term, prices: prices, radius: radius, open_now: openNow ) { (restaurants, error) in
+            defer {
+                semaphore.signal()
+            }
             if let error = error {
                 print("price array: \(prices)")
                 print("Error fetching restaurants: \(error)")
@@ -47,13 +54,17 @@ class RestaurantListViewModel: ObservableObject {
                     self.restaurants = restaurants
                     print("getRestaurants --> Latitude: \(latitude)Longitude: \(longitude)category: \(self.category)limit: \(self.limit)term: \(term)price: \(prices)radius: \(radius) isOpen: \(openNow)")
                     print("Fetched \(restaurants.count) restaurants")
+                    fetchedRestaurants = restaurants
+
                 }
             } else {
                 print("maybe this is what's wrong?")
             }
+            
         }
-            
-            
+        semaphore.wait()
+        print("returning getPlaces")
+        return fetchedRestaurants
         
     }
 }

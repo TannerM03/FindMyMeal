@@ -31,7 +31,6 @@ struct SwiperView: View {
     
 //    @State private var winner: RestaurantViewModel?
     
-
     
     var body: some View {
         ZStack {
@@ -51,100 +50,103 @@ struct SwiperView: View {
                 Spacer()
                 if restaurants.isEmpty {
                     Text("Loading restaurants...")
-                } else if restaurants.count == 1 {
-                    CardView(restaurant: restaurants[0])
-                        .rotationEffect(.degrees(rotationAngle))
-                        .animation(.easeInOut(duration: 1.0))
-                        .onAppear {
-                                        // Start the animation when the view appears
-                            withAnimation {
-                                rotationAngle += 720 // Rotate one full circle
+                } else {
+                    if restaurants.count == 1 {
+                        CardView(restaurant: restaurants[0])
+                            .rotationEffect(.degrees(rotationAngle))
+                            .animation(.easeInOut(duration: 1.0))
+                            .onAppear {
+                                // Start the animation when the view appears
+                                withAnimation {
+                                    rotationAngle += 720 // Rotate one full circle
+                                }
                             }
+                        Button {
+                            savedRestaurant = restaurants[0]
+                            selectedTab = "3"
+                            print("clicked favorites button")
+                        }label: {
+                            Text("Click to add to favorites")
+                                .padding()
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(.white)
+                                        .shadow(radius: 2)
+                                )
                         }
-                    Button {
-                        savedRestaurant = restaurants[0]
-                        selectedTab = "3"
-                        print("clicked favorites button")
-                    }label: {
-                        Text("Click to add to favorites")
-                            .padding()
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .background(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .fill(.white)
-                                    .shadow(radius: 2)
-                            )
+                        .padding(.top, 40)
+                        
+                        Spacer()
                     }
-                    .padding(.top, 40)
-
-                    Spacer()
-                } 
-
-                else {
-                    // current restaurant
-                    Text("Restaurants Remaining: \(restaurants.count)")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .shadow(color:.gray, radius: 5)
-
-                    CardView(restaurant: restaurants[topIndex])
-                        .padding()
-                        .offset(x: offset.width, y: offset.height * 0.4)
-                        .rotationEffect(.degrees(Double(offset.width / 80)))
-                        .gesture(
-                            DragGesture()
-                                .onChanged { gesture in
-                                    offset = gesture.translation
-                                }
-                                .onEnded { value in
-                                    // Deletes if you swipe left
-//                                    if value.translation.width < -100 || value.translation.width > 100{
-//                                        // removes top restaurant
-//                                        self.removeCurrentRestaurant()
-//                                    }
-                                    SwipeCard(width: offset.width)
-                                }
-                            
-                        )
-                    if restaurants.count != 1 {
-                        Text("VS")
-                            .font(.title)
-                            .italic()
+                    
+                    else {
+                        // current restaurant
+                        Text("Restaurants Remaining: \(restaurants.count)")
+                            .font(.title2)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
                             .shadow(color:.gray, radius: 5)
-                    }
-                    
-                    //next restaurant if available
-                    if bottomIndex < restaurants.count && bottomIndex != topIndex {
-                        CardView(restaurant: restaurants[bottomIndex])
+                        
+                        CardView(restaurant: restaurants[topIndex])
                             .padding()
-                            .offset(x: offsetTwo.width, y: offsetTwo.height * 0.4)
-                            .rotationEffect(.degrees(Double(offsetTwo.width / 80)))
+                            .offset(x: offset.width, y: offset.height * 0.4)
+                            .rotationEffect(.degrees(Double(offset.width / 80)))
                             .gesture(
                                 DragGesture()
                                     .onChanged { gesture in
-                                        offsetTwo = gesture.translation
+                                        offset = gesture.translation
                                     }
                                     .onEnded { value in
                                         // Deletes if you swipe left
-//                                        if value.translation.width < -100 || value.translation.width > 100 {
-//                                            // removes top restaurant
-//                                            self.removeSecondRestaurant()
-//                                        }
-                                        SwipeSecondCard(width: offsetTwo.width)
+                                        //                                    if value.translation.width < -100 || value.translation.width > 100{
+                                        //                                        // removes top restaurant
+                                        //                                        self.removeCurrentRestaurant()
+                                        //                                    }
+                                        SwipeCard(width: offset.width)
                                     }
                                 
                             )
-                        Spacer()
+                        if restaurants.count != 1 {
+                            Text("VS")
+                                .font(.title)
+                                .italic()
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .shadow(color:.gray, radius: 5)
+                        }
+                        
+                        //next restaurant if available
+                        if bottomIndex < restaurants.count && bottomIndex != topIndex {
+                            CardView(restaurant: restaurants[bottomIndex])
+                                .padding()
+                                .offset(x: offsetTwo.width, y: offsetTwo.height * 0.4)
+                                .rotationEffect(.degrees(Double(offsetTwo.width / 80)))
+                                .gesture(
+                                    DragGesture()
+                                        .onChanged { gesture in
+                                            offsetTwo = gesture.translation
+                                        }
+                                        .onEnded { value in
+                                            // Deletes if you swipe left
+                                            //                                        if value.translation.width < -100 || value.translation.width > 100 {
+                                            //                                            // removes top restaurant
+                                            //                                            self.removeSecondRestaurant()
+                                            //                                        }
+                                            SwipeSecondCard(width: offsetTwo.width)
+                                        }
+                                    
+                                )
+                            Spacer()
+                        }
                     }
                 }
             }
         }.onChange(of: vm.restaurants, initial: true) { oldRestaurants, newRestaurants in
             // Update restaurants when vm.restaurants changes
             if !newRestaurants.isEmpty {
+                print("this ran")
                 restaurants = newRestaurants
             }
         }

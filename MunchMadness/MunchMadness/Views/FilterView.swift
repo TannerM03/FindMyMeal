@@ -335,20 +335,24 @@ struct SubmitBtn: View {
         @State var profile = false
         
         Button(action: {
+            restaurants = []
             isNewSearch = true
             radius = distance * 1600
             vm.term = userMood
             vm.prices = prices
             if usingPersonalLocation == true {
-                vm.getPlaces(with: userMood, longitude: longitude, latitude: latitude, radius: radius, openNow: isOpen, prices: prices)
-                isSwiperViewActive = true
-            } else if usingPersonalLocation == false {
-                vm.getPlaces(with: userMood, longitude: selectedLongitude, latitude: selectedLatitude, radius: radius, openNow: isOpen, prices: prices)
-                isSwiperViewActive = true
+                    print("restaurants before getPlaces: \(restaurants)")
+                    restaurants = vm.getPlaces(with: userMood, longitude: longitude, latitude: latitude, radius: radius, openNow: isOpen, prices: prices)
+                    print("restaurants after getPlaces: \(restaurants) + isSwiperViewActice: \(isSwiperViewActive)")
+                    print("after set to true: \(isSwiperViewActive) + restaurants: \(restaurants)")
+            }
+            else if usingPersonalLocation == false {
+                restaurants = vm.getPlaces(with: userMood, longitude: selectedLongitude, latitude: selectedLatitude, radius: radius, openNow: isOpen, prices: prices)
             }
             else {
                 print("Location not available")
             }
+            isSwiperViewActive = true
         }, label: {
             Text("SUBMIT")
                 .font(.title2)
