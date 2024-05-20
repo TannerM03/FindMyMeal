@@ -156,40 +156,44 @@ struct PricesFilter: View {
                 
             } label: {
                 Text("$")
-            }.frame(width: 82, height: 70)
-                .tint(prices.contains(1) ? Color.white : Color.darkerblue)
-                .background(prices.contains(1) ? Color.darkerblue : Color.white)
-                .border(.black)
+                    .frame(width: 82, height: 70)
+                        .tint(prices.contains(1) ? Color.white : Color.darkerblue)
+                        .background(prices.contains(1) ? Color.darkerblue : Color.white)
+                        .border(.black)
+            }
             Button {
                 updatePrice(2)
                 print("\(prices)")
                 
             } label: {
                 Text("$$")
-            }.frame(width: 82, height: 70)
-                .tint(prices.contains(2) ? Color.white : Color.darkerblue)
-                .background(prices.contains(2) ? Color.darkerblue : Color.white)
-                .border(.black)
+                    .frame(width: 82, height: 70)
+                        .tint(prices.contains(2) ? Color.white : Color.darkerblue)
+                        .background(prices.contains(2) ? Color.darkerblue : Color.white)
+                        .border(.black)
+            }
             Button {
                 updatePrice(3)
                 print("\(prices)")
                 
             } label: {
                 Text("$$$")
-            }.frame(width: 82, height: 70)
-                .tint(prices.contains(3) ? Color.white : Color.darkerblue)
-                .background(prices.contains(3) ? Color.darkerblue : Color.white)
-                .border(.black)
+                    .frame(width: 82, height: 70)
+                        .tint(prices.contains(3) ? Color.white : Color.darkerblue)
+                        .background(prices.contains(3) ? Color.darkerblue : Color.white)
+                        .border(.black)
+            }
             Button {
                 updatePrice(4)
                 print("\(prices)")
                 
             } label: {
                 Text("$$$$")
-            }.frame(width: 82, height: 70)
-                .tint(prices.contains(4) ? Color.white : Color.darkerblue)
-                .background(prices.contains(4) ? Color.darkerblue : Color.white)
-                .border(.black)
+                    .frame(width: 82, height: 70)
+                        .tint(prices.contains(4) ? Color.white : Color.darkerblue)
+                        .background(prices.contains(4) ? Color.darkerblue : Color.white)
+                        .border(.black)
+            }
         }
         .font(.title2)
         .fontWeight(.medium)
@@ -239,20 +243,21 @@ struct SelectLocationBtn: View {
             }.font(.headline)
                 .italic()
                 .foregroundColor(selectLocationPressed ? Color.white : Color.darkerblue)
-        }.padding()
-            .foregroundColor(.black)
-            .frame(width: 150, height: 60)
-            .background(
-                RoundedRectangle(cornerRadius: 40)
-                    .fill(selectLocationPressed ? Color.darkerblue : Color.white)
-                    .overlay(
+                .padding()
+                    .foregroundColor(.black)
+                    .frame(width: 150, height: 60)
+                    .background(
                         RoundedRectangle(cornerRadius: 40)
-                            .stroke(Color.black, lineWidth: 1)
-                    )
-                
-            ).navigationDestination(isPresented: $mapView) {
-                SelectLocationView(selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude)
-            }
+                            .fill(selectLocationPressed ? Color.darkerblue : Color.white)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 40)
+                                    .stroke(Color.black, lineWidth: 1)
+                            )
+                        
+                    ).navigationDestination(isPresented: $mapView) {
+                        SelectLocationView(selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude)
+                    }
+        }
     }
 }
 
@@ -294,19 +299,20 @@ struct UserLocationBtn: View {
             }.font(.headline)
                 .italic()
                 .foregroundColor(useMyLocationPressed ? Color.white : Color.darkerblue)
-            
-        }.padding()
-            .foregroundColor(.black)
-            .frame(width: 150, height: 60)
-            .background(
-                RoundedRectangle(cornerRadius: 40)
-                    .fill(useMyLocationPressed ? Color.darkerblue : Color.white)
-                    .overlay(
+                .padding()
+                    .foregroundColor(.black)
+                    .frame(width: 150, height: 60)
+                    .background(
                         RoundedRectangle(cornerRadius: 40)
-                            .stroke(Color.black, lineWidth: 1)
+                            .fill(useMyLocationPressed ? Color.darkerblue : Color.white)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 40)
+                                    .stroke(Color.black, lineWidth: 1)
+                            )
+                        
                     )
-                
-            )
+            
+        }
     }
 }
 
@@ -342,12 +348,16 @@ struct SubmitBtn: View {
             vm.prices = prices
             if usingPersonalLocation == true {
                     print("restaurants before getPlaces: \(restaurants)")
-                    restaurants = vm.getPlaces(with: userMood, longitude: longitude, latitude: latitude, radius: radius, openNow: isOpen, prices: prices)
+                Task {
+                    restaurants = await vm.getPlaces(with: userMood, longitude: longitude, latitude: latitude, radius: radius, openNow: isOpen, prices: prices)
+                }
                     print("restaurants after getPlaces: \(restaurants) + isSwiperViewActice: \(isSwiperViewActive)")
                     print("after set to true: \(isSwiperViewActive) + restaurants: \(restaurants)")
             }
             else if usingPersonalLocation == false {
-                restaurants = vm.getPlaces(with: userMood, longitude: selectedLongitude, latitude: selectedLatitude, radius: radius, openNow: isOpen, prices: prices)
+                Task {
+                    restaurants = await vm.getPlaces(with: userMood, longitude: selectedLongitude, latitude: selectedLatitude, radius: radius, openNow: isOpen, prices: prices)
+                }
             }
             else {
                 print("Location not available")
