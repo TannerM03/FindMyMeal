@@ -49,7 +49,14 @@ struct SwiperView: View {
             )
                 Spacer()
                 if restaurants.isEmpty {
-                    Text("Loading restaurants...")
+                    VStack {
+                        Spacer()
+                        Text("Loading restaurants...")
+                            .font(.title2)
+                            .foregroundStyle(.white)
+                            .fontWeight(.semibold)
+                        Spacer()
+                    }
                 } else {
                     if restaurants.count == 1 {
                         CardView(restaurant: restaurants[0])

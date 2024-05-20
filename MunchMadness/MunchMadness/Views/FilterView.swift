@@ -10,7 +10,7 @@ import CoreLocation
 
 struct FilterView: View {
 
-    @State private var distance = 5
+    @State private var distance = 1
     @State private var radius = 0
     
     @State private var prices: [Int] = []
@@ -213,7 +213,7 @@ struct DistancePicker: View {
     @Binding var distance: Int
     var body: some View {
         Picker("Distance", selection: $distance) {
-            ForEach(0...25, id: \.self) { mile in
+            ForEach(1...25, id: \.self) { mile in
                 Text("\(mile) mi")
             }
         }.background(Color.white)

@@ -27,9 +27,9 @@ struct TabsView: View {
                     Label("Filters", systemImage: "menucard.fill")
                 }
                 .tag("2")
-            ProfileView(restaurant: $savedRestaurant, selectedTab: $selectedTab)
+            FavoritesView(restaurant: $savedRestaurant, selectedTab: $selectedTab)
                 .tabItem {
-                    Label("Profile", systemImage: "book.fill")
+                    Label("Favorites", systemImage: "heart.fill")
                 }
                 .tag("3")
         }

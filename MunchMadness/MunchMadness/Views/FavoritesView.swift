@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftData
 
-struct ProfileView: View {
+struct FavoritesView: View {
     @Environment(\.modelContext) private var context
     @Query private var items: [DataItem]
     
@@ -11,44 +11,154 @@ struct ProfileView: View {
     @State private var selectedItem: DataItem?
     @State private var editedNotes: String = ""
     @State private var openEditor: Bool = false
+    @State private var searchTerm: String = ""
+    
+    @State private var currentPage: Int = 1
+    @State private var itemsPerPage: Int = 7
+    
+    var filteredItems: [DataItem] {
+            if searchTerm.isEmpty {
+                return items.reversed()
+            } else {
+                return items.reversed().filter { item in
+                    item.name.lowercased().contains(searchTerm.lowercased()) ||
+                    item.city.lowercased().contains(searchTerm.lowercased())
+                }
+            }
+        }
+    
+    var paginatedItems: [DataItem] {
+            let startIndex = (currentPage - 1) * itemsPerPage
+            let endIndex = min(startIndex + itemsPerPage, filteredItems.count)
+            return Array(filteredItems[startIndex..<endIndex])
+        }
     
     var body: some View {
         ZStack {
+            Color.uncBlue
             VStack {
-                Text("Favorites")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .italic()
-                    .foregroundStyle(.darkerblue)
-                List() {
-                    ForEach(items) { item in
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text(item.name)
-                                Text("\(item.city), \(item.state ?? "")")
-                                    .font(.footnote)
+                if paginatedItems.count != 0 {
+                    Text("Favorites")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .italic()
+                        .foregroundStyle(.darkerblue)
+                        .background {
+                            Rectangle()
+                                .frame(width: 500, height: 200)
+                                .foregroundStyle(.white)
+                        }
+                    TextField("Search by restaurant name or city", text: $searchTerm)
+                        .font(.subheadline)
+                        .padding(12)
+                        .background(.white)
+                        .padding()
+                        .shadow(radius: 10)
+                        .background {
+                            Rectangle()
+                                .frame(width: 500, height: 86)
+                                .foregroundStyle(Color.uncBlue)
+                        }.overlay(alignment: .trailing) {
+                            Button {
+                                searchTerm = ""
+                            }label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .resizable()
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(.gray)
+                                    .padding(.trailing, 25)
+                            }.onTapGesture {
+                                //swipe down keyboard
                             }
-                            Spacer()
-                            ImageView(urlString: item.imageUrl)
-                                .frame(width: 50, height: 36)
-                                .cornerRadius(5)
-                                .padding(.trailing, 10)
                         }
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            selectedItem = item
-                            editedNotes = item.userNotes ?? ""
+                    List() {
+                        ForEach(paginatedItems) { item in
+                            if (item.name.lowercased().contains(searchTerm.lowercased()) || item.city.lowercased().contains(searchTerm.lowercased()) || searchTerm == "") {
+                                HStack {
+                                    VStack(alignment: .leading) {
+                                        Text(item.name)
+                                        Text("\(item.city), \(item.state ?? "")")
+                                            .font(.footnote)
+                                    }
+                                    Spacer()
+                                    ImageView(urlString: item.imageUrl)
+                                        .frame(width: 50, height: 36)
+                                        .cornerRadius(5)
+                                        .padding(.trailing, 10)
+                                }
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    selectedItem = item
+                                    editedNotes = item.userNotes ?? ""
+                                }
+                            }
+                        }
+                        .onDelete { indexes in
+                            for index in indexes {
+                                deleteItem(items[items.count - index - 1])
+                            }
                         }
                     }
-                    .onDelete { indexes in
-                        for index in indexes {
-                            deleteItem(items[index])
+                    .scrollContentBackground(.hidden)
+                    .background(Color.uncBlue)
+                    .padding(.top, -20)
+                    
+                    HStack(spacing: 30) {
+                        Button {
+                            currentPage = 1
+                        } label: {
+                            Image(systemName: "chevron.left.2")
                         }
+                        Button {
+                            if currentPage > 1 {
+                                currentPage -= 1
+                            }
+                        } label: {
+                            Image(systemName: "arrow.left")
+                        }
+                        Text("\(currentPage) of \((filteredItems.count + itemsPerPage - 1) / itemsPerPage)")
+                        Button {
+                            if ((currentPage * itemsPerPage) < items.count) {
+                                currentPage += 1
+                            }
+                        } label: {
+                            Image(systemName: "arrow.right")
+                        }
+                        Button {
+                            currentPage = (filteredItems.count + itemsPerPage - 1) / itemsPerPage
+                        } label: {
+                            Image(systemName: "chevron.right.2")
+                        }
+                    }.foregroundStyle(Color.white)
+                        .padding(.bottom, 30)
+                        .background {
+                            Rectangle()
+                                .frame(width: 500, height: 100)
+                                .foregroundStyle(Color.uncBlue)
+                        }
+                } else {
+                        Text("Favorites")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .italic()
+                            .foregroundStyle(.darkerblue)
+                            .background {
+                                Rectangle()
+                                    .frame(width: 500, height: 70)
+                                    .foregroundStyle(.white)
+                            }
+
+                        Spacer()
+                        Text("You don't have any favorites yet :(")
+                            .foregroundColor(.white)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .padding(.trailing, 10)
+                            .shadow(color:.gray, radius: 5)
+
+                        Spacer()
                     }
-                }
-                .scrollContentBackground(.hidden)
-                .background(Color.uncBlue)
-                .padding(.top, -7)
+
             }
         }
         .sheet(item: $selectedItem) { selectedItem in
@@ -213,15 +323,27 @@ struct ProfileView: View {
                                 .padding(.top, 8)
                             }
                     }
-                    
-                    Text(selectedItem.userNotes ?? "")
-                        .multilineTextAlignment(.leading)
-                        .padding(10)
-                        .frame(width: 300, height: 120, alignment: .topLeading)
+                    ScrollView {
+                        Text(selectedItem.userNotes ?? "")
+                            .multilineTextAlignment(.leading)
+                            .padding(10)
+                            .frame(width: 300, alignment: .topLeading)
+                    }.frame(height: 120)
                         .background {
                             RoundedRectangle(cornerRadius: 20)
                                 .stroke(Color.black, lineWidth: 1)
                                 .fill(Color.white)
+                        }.overlay {
+                            if (editedNotes.isEmpty) {
+                                Text("No notes yet...")
+                                    .frame(width: 300)
+                                    .font(.headline)
+                                    .foregroundStyle(Color.gray)
+                                    .fontWeight(.medium)
+                                    .padding(.trailing, 160)
+                                    .padding(.bottom, 70)
+                                    .allowsHitTesting(false)
+                            }
                         }
                     
                     Spacer()
@@ -237,13 +359,26 @@ struct ProfileView: View {
                             .padding()
                         
                         TextEditor(text: $editedNotes)
-                            .frame(width: 300, height: 120)
-                            .padding()
+                            .padding(6)
+                            .multilineTextAlignment(.leading)
+                            .frame(width: 300, height: 120, alignment: .topLeading)
                             .background {
                                 RoundedRectangle(cornerRadius: 20)
                                     .stroke(Color.black, lineWidth: 1)
+                            }.overlay {
+                                if (editedNotes.isEmpty) {
+                                    Text("Click to add notes...")
+                                        .frame(width: 300)
+                                        .font(.headline)
+                                        .foregroundStyle(Color.gray)
+                                        .fontWeight(.medium)
+                                        .padding(.trailing, 120)
+                                        .padding(.bottom, 65)
+                                        .allowsHitTesting(false)
+                                }
                             }
                         
+
                         Button {
                             selectedItem.userNotes = editedNotes
                             do {

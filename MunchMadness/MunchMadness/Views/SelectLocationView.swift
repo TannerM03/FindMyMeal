@@ -40,7 +40,7 @@ struct SelectLocationView: View {
             .overlay(alignment: .top) {
                 VStack {
                     //user input location
-                    TextField("search for city or address", text: $searchText)
+                    TextField("Search for city or address", text: $searchText)
                         .font(.subheadline)
                         .padding(12)
                         .background(.white)
