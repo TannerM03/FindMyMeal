@@ -13,7 +13,7 @@ struct FilterView: View {
     @State private var distance = 1
     @State private var radius = 0
     
-    @State private var prices: [Int] = []
+    @State private var prices: [Int] = [1]
     
     @State var latitude: CLLocationDegrees
     @State var longitude: CLLocationDegrees
@@ -69,6 +69,13 @@ struct FilterView: View {
                     //add the ability to set location
                     HStack {
                         UserLocationBtn(locationManager: locationManager, latitude: $latitude, longitude: $longitude, usingPersonalLocation: $usingPersonalLocation, selectLocationPressed: $selectLocationPressed, useMyLocationPressed: $useMyLocationPressed)
+                        
+                        Text("OR")
+                            .foregroundColor(.white)
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .shadow(color:.gray, radius: 5)
+                            .italic()
                         
                         SelectLocationBtn(usingPersonalLocation: $usingPersonalLocation, mapView: $mapView, selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude, selectLocationPressed: $selectLocationPressed, useMyLocationPressed: $useMyLocationPressed)
                         

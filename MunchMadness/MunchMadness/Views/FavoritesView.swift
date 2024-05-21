@@ -97,8 +97,11 @@ struct FavoritesView: View {
                         }
                         .onDelete { indexes in
                             for index in indexes {
-                                deleteItem(items[items.count - index - 1])
-                                updateTrigger.toggle()
+                                deleteItem(paginatedItems[index])
+//                                print("index: \(index)")
+//                                print("new index: \(items.count) - \(index) - 1")
+//                                deleteItem(items[items.count - index - 1])
+//                                updateTrigger.toggle()
                             }
                         }
                     }
@@ -407,8 +410,6 @@ struct FavoritesView: View {
             }
         }.onAppear {
             addItem()
-        }.onChange(of: items) {
-            updateTrigger.toggle()
         }
     }
     
@@ -441,5 +442,11 @@ struct FavoritesView: View {
     
     func deleteItem(_ item: DataItem) {
         context.delete(item)
+        do {
+            try context.save()
+            updateTrigger.toggle()
+            } catch {
+                print("Failed to save context: \(error)")
+            }
     }
 }
