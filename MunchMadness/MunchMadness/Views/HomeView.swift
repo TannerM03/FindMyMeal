@@ -54,20 +54,21 @@ struct BeginButton: View {
         }, label: {
             Text("BEGIN")
                 .font(.title2)
+                .padding()
+                .foregroundColor(.black)
+                .frame(width: 150, height: 60)
+                .background(
+                    RoundedRectangle(cornerRadius: 40)
+                        .fill(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 40)
+                                .stroke(Color.black, lineWidth: 1)
+                        )
+                    
+                )
         })
         
-        .padding()
-        .foregroundColor(.black)
-        .frame(width: 150, height: 60)
-        .background(
-            RoundedRectangle(cornerRadius: 40)
-                .fill(Color.white)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 40)
-                        .stroke(Color.black, lineWidth: 1)
-                )
-            
-        )
+        
         .padding(.bottom, 50)
     }
 }

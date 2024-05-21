@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
  struct MunchMadnessApp: App {
@@ -13,5 +14,6 @@ import SwiftUI
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: DataItem.self)
     }
 }

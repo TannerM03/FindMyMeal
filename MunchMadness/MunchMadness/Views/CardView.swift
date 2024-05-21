@@ -118,7 +118,9 @@ struct CardView: View {
                     Text("\(restaurant.displayPhone)")
                     Text("*")
                     Text("\(restaurant.price)")
-                            
+                    Text("*")
+                    Text(String(format: "%.1f mi", restaurant.distance / 1600))
+
                 }.font(.subheadline)
                     .foregroundColor(.secondary)
                 

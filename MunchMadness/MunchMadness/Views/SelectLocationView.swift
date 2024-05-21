@@ -27,6 +27,8 @@ struct SelectLocationView: View {
     
     @State private var swiperTime: Bool = false
     
+    @State private var searched: Bool = false
+    
     var body: some View {
         NavigationView {
             Map(position: $cameraPosition) {
@@ -38,15 +40,47 @@ struct SelectLocationView: View {
             .overlay(alignment: .top) {
                 VStack {
                     //user input location
-                    TextField("search for city or address", text: $searchText)
+                    TextField("Search for city or address", text: $searchText)
                         .font(.subheadline)
                         .padding(12)
                         .background(.white)
                         .padding()
                         .shadow(radius: 10)
+                        .overlay(alignment: .trailing) {
+                            Button {
+                                searched = true
+                                
+                                Task { await searchPlaces()
+                                    if let firstItem = results.first {
+                                        var resultLocation: CLLocationCoordinate2D {
+                                            return .init(latitude: firstItem.placemark.coordinate.latitude, longitude: firstItem.placemark.coordinate.longitude)
+                                        }
+                                        var resultRegion: MKCoordinateRegion {
+                                            return .init(center: resultLocation,
+                                                         latitudinalMeters: 10000, longitudinalMeters: 10000)
+                                        }
+                                        cameraPosition = .region(resultRegion)
+                                        selectedLatitude = firstItem.placemark.coordinate.latitude
+                                        selectedLongitude = firstItem.placemark.coordinate.longitude
+                                        print("Latitude: \(firstItem.placemark.coordinate.latitude)")
+                                        print("Longitude: \(firstItem.placemark.coordinate.longitude)")
+                                        
+                                    }
+                                }
+                            }label: {
+                                Text("Search")
+                                    .padding(.vertical, 12)
+                                    .padding(.horizontal, 5)
+                                    .font(.subheadline)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 1)
+                                            .fill(Color.uncBlue)
+                                    )
+                            }.padding(.trailing, 17)
+                        }
                     Spacer()
                     //button that gets latitude and longitude, brings you back to the filters page
-                    if searchText != "" {
+                    if searched == true {
                         Button (action: {
                             swiperTime.toggle()
                             print("button clicked")
@@ -81,6 +115,7 @@ struct SelectLocationView: View {
                 }
             }
             .onSubmit(of: .text) {
+                searched = true
                 //this searches for what the user inputs
                 Task { await searchPlaces()
                     if let firstItem = results.first {

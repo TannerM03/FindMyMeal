@@ -10,7 +10,7 @@ import CoreLocation
 
 struct FilterView: View {
 
-    @State private var distance = 0
+    @State private var distance = 1
     @State private var radius = 0
     
     @State private var prices: [Int] = []
@@ -36,6 +36,16 @@ struct FilterView: View {
     @State private var selectLocationPressed = false
     @State private var useMyLocationPressed = false
     
+    @State private var isNewSearch = false
+    
+    @Binding var selectedTab: String
+    
+    @Binding var savedRestaurant: RestaurantViewModel?
+    
+    @State var restaurants: [RestaurantViewModel] = []
+
+    
+            
     var body: some View {
         
         NavigationStack {
@@ -115,7 +125,7 @@ struct FilterView: View {
                         .padding(.bottom, 20)
                     
                     //submit button that takes you to SwiperView()
-                    SubmitBtn(distance: $distance, userMood: $userMood, prices: $prices, usingPersonalLocation: $usingPersonalLocation, radius: $radius, isSwiperViewActive: $isSwiperViewActive, isOpen: $isOpen, latitude: $latitude, longitude: $longitude, selectedLongitude: $selectedLongitude, selectedLatitude: $selectedLatitude)
+                    SubmitBtn(distance: $distance, userMood: $userMood, prices: $prices, usingPersonalLocation: $usingPersonalLocation, radius: $radius, isSwiperViewActive: $isSwiperViewActive, isOpen: $isOpen, latitude: $latitude, longitude: $longitude, selectedLongitude: $selectedLongitude, selectedLatitude: $selectedLatitude, isNewSearch: $isNewSearch, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant, restaurants: $restaurants)
                     
                     Spacer()
                 }
@@ -132,9 +142,9 @@ struct FilterView: View {
 
 
 
-#Preview {
-    FilterView(latitude: 40.7128, longitude: -74.0060, vm: RestaurantListViewModel(), locationManager: LocationManager())
-}
+//#Preview {
+//    FilterView(latitude: 40.7128, longitude: -74.0060, vm: RestaurantListViewModel(), locationManager: LocationManager())
+//}
 
 struct PricesFilter: View {
     @Binding var prices: [Int]
@@ -146,40 +156,44 @@ struct PricesFilter: View {
                 
             } label: {
                 Text("$")
-            }.frame(width: 82, height: 70)
-                .tint(prices.contains(1) ? Color.white : Color.darkerblue)
-                .background(prices.contains(1) ? Color.darkerblue : Color.white)
-                .border(.black)
+                    .frame(width: 82, height: 70)
+                        .tint(prices.contains(1) ? Color.white : Color.darkerblue)
+                        .background(prices.contains(1) ? Color.darkerblue : Color.white)
+                        .border(.black)
+            }
             Button {
                 updatePrice(2)
                 print("\(prices)")
                 
             } label: {
                 Text("$$")
-            }.frame(width: 82, height: 70)
-                .tint(prices.contains(2) ? Color.white : Color.darkerblue)
-                .background(prices.contains(2) ? Color.darkerblue : Color.white)
-                .border(.black)
+                    .frame(width: 82, height: 70)
+                        .tint(prices.contains(2) ? Color.white : Color.darkerblue)
+                        .background(prices.contains(2) ? Color.darkerblue : Color.white)
+                        .border(.black)
+            }
             Button {
                 updatePrice(3)
                 print("\(prices)")
                 
             } label: {
                 Text("$$$")
-            }.frame(width: 82, height: 70)
-                .tint(prices.contains(3) ? Color.white : Color.darkerblue)
-                .background(prices.contains(3) ? Color.darkerblue : Color.white)
-                .border(.black)
+                    .frame(width: 82, height: 70)
+                        .tint(prices.contains(3) ? Color.white : Color.darkerblue)
+                        .background(prices.contains(3) ? Color.darkerblue : Color.white)
+                        .border(.black)
+            }
             Button {
                 updatePrice(4)
                 print("\(prices)")
                 
             } label: {
                 Text("$$$$")
-            }.frame(width: 82, height: 70)
-                .tint(prices.contains(4) ? Color.white : Color.darkerblue)
-                .background(prices.contains(4) ? Color.darkerblue : Color.white)
-                .border(.black)
+                    .frame(width: 82, height: 70)
+                        .tint(prices.contains(4) ? Color.white : Color.darkerblue)
+                        .background(prices.contains(4) ? Color.darkerblue : Color.white)
+                        .border(.black)
+            }
         }
         .font(.title2)
         .fontWeight(.medium)
@@ -199,7 +213,7 @@ struct DistancePicker: View {
     @Binding var distance: Int
     var body: some View {
         Picker("Distance", selection: $distance) {
-            ForEach(0...25, id: \.self) { mile in
+            ForEach(1...25, id: \.self) { mile in
                 Text("\(mile) mi")
             }
         }.background(Color.white)
@@ -229,20 +243,21 @@ struct SelectLocationBtn: View {
             }.font(.headline)
                 .italic()
                 .foregroundColor(selectLocationPressed ? Color.white : Color.darkerblue)
-        }.padding()
-            .foregroundColor(.black)
-            .frame(width: 150, height: 60)
-            .background(
-                RoundedRectangle(cornerRadius: 40)
-                    .fill(selectLocationPressed ? Color.darkerblue : Color.white)
-                    .overlay(
+                .padding()
+                    .foregroundColor(.black)
+                    .frame(width: 150, height: 60)
+                    .background(
                         RoundedRectangle(cornerRadius: 40)
-                            .stroke(Color.black, lineWidth: 1)
-                    )
-                
-            ).navigationDestination(isPresented: $mapView) {
-                SelectLocationView(selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude)
-            }
+                            .fill(selectLocationPressed ? Color.darkerblue : Color.white)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 40)
+                                    .stroke(Color.black, lineWidth: 1)
+                            )
+                        
+                    ).navigationDestination(isPresented: $mapView) {
+                        SelectLocationView(selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude)
+                    }
+        }
     }
 }
 
@@ -284,19 +299,20 @@ struct UserLocationBtn: View {
             }.font(.headline)
                 .italic()
                 .foregroundColor(useMyLocationPressed ? Color.white : Color.darkerblue)
-            
-        }.padding()
-            .foregroundColor(.black)
-            .frame(width: 150, height: 60)
-            .background(
-                RoundedRectangle(cornerRadius: 40)
-                    .fill(useMyLocationPressed ? Color.darkerblue : Color.white)
-                    .overlay(
+                .padding()
+                    .foregroundColor(.black)
+                    .frame(width: 150, height: 60)
+                    .background(
                         RoundedRectangle(cornerRadius: 40)
-                            .stroke(Color.black, lineWidth: 1)
+                            .fill(useMyLocationPressed ? Color.darkerblue : Color.white)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 40)
+                                    .stroke(Color.black, lineWidth: 1)
+                            )
+                        
                     )
-                
-            )
+            
+        }
     }
 }
 
@@ -313,22 +329,40 @@ struct SubmitBtn: View {
     @Binding var selectedLongitude: CLLocationDegrees
     @Binding var selectedLatitude: CLLocationDegrees
     @ObservedObject var vm = RestaurantListViewModel()
+    @Binding var isNewSearch: Bool
+    @Binding var selectedTab: String
+    
+    @Binding var savedRestaurant: RestaurantViewModel?
+    @Binding var restaurants: [RestaurantViewModel]
+
 
     var body: some View {
+
+        @State var profile = false
+        
         Button(action: {
-            radius = distance * 1609
+            restaurants = []
+            isNewSearch = true
+            radius = distance * 1600
             vm.term = userMood
             vm.prices = prices
             if usingPersonalLocation == true {
-                vm.getPlaces(with: userMood, longitude: longitude, latitude: latitude, radius: radius, openNow: isOpen, prices: prices)
-                isSwiperViewActive = true
-            } else if usingPersonalLocation == false {
-                vm.getPlaces(with: userMood, longitude: selectedLongitude, latitude: selectedLatitude, radius: radius, openNow: isOpen, prices: prices)
-                isSwiperViewActive = true
+                    print("restaurants before getPlaces: \(restaurants)")
+                Task {
+                    restaurants = await vm.getPlaces(with: userMood, longitude: longitude, latitude: latitude, radius: radius, openNow: isOpen, prices: prices)
+                }
+                    print("restaurants after getPlaces: \(restaurants) + isSwiperViewActice: \(isSwiperViewActive)")
+                    print("after set to true: \(isSwiperViewActive) + restaurants: \(restaurants)")
+            }
+            else if usingPersonalLocation == false {
+                Task {
+                    restaurants = await vm.getPlaces(with: userMood, longitude: selectedLongitude, latitude: selectedLatitude, radius: radius, openNow: isOpen, prices: prices)
+                }
             }
             else {
                 print("Location not available")
             }
+            isSwiperViewActive = true
         }, label: {
             Text("SUBMIT")
                 .font(.title2)
@@ -347,7 +381,7 @@ struct SubmitBtn: View {
                 )
                 .padding(.bottom, 20)
         }).navigationDestination(isPresented: $isSwiperViewActive) {
-            SwiperView(vm: vm)
+            SwiperView(vm: vm, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant, restaurants: $restaurants)
         }
     }
 }
