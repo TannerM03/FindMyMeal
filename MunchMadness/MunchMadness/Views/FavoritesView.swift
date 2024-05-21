@@ -16,6 +16,8 @@ struct FavoritesView: View {
     @State private var currentPage: Int = 1
     @State private var itemsPerPage: Int = 7
     
+    @State private var updateTrigger: Bool = false
+    
     var filteredItems: [DataItem] {
             if searchTerm.isEmpty {
                 return items.reversed()
@@ -96,6 +98,7 @@ struct FavoritesView: View {
                         .onDelete { indexes in
                             for index in indexes {
                                 deleteItem(items[items.count - index - 1])
+                                updateTrigger.toggle()
                             }
                         }
                     }
@@ -404,6 +407,8 @@ struct FavoritesView: View {
             }
         }.onAppear {
             addItem()
+        }.onChange(of: items) {
+            updateTrigger.toggle()
         }
     }
     
