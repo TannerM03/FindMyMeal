@@ -9,11 +9,14 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var locationManager = LocationManager()
-    @State private var tab = "1"
+    @State private var selectedTab = "1"
+    @StateObject var vm = RestaurantListViewModel()
+    @State var restaurants: [RestaurantViewModel] = []
     
     var body: some View {
         if locationManager.hasLocationAccess {
-            TabsView(selectedTab: $tab)
+            HomeView(selectedTab: $selectedTab)
+//            TabsView(selectedTab: $tab, vm: vm, restaurants: $restaurants)
         } else {
             RequestLocationAccessView(locationManager: locationManager)
         }
@@ -21,6 +24,6 @@ struct ContentView: View {
 }
 
 
-#Preview {
-    ContentView()
-}
+//#Preview {
+//    ContentView()
+//}

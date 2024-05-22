@@ -42,28 +42,41 @@ struct FilterView: View {
     
     @Binding var savedRestaurant: RestaurantViewModel?
     
-    @State var restaurants: [RestaurantViewModel] = []
+    @Binding var restaurants: [RestaurantViewModel]
 
     
             
     var body: some View {
         
-        NavigationStack {
+//        NavigationStack {
             ZStack {
                 Color.uncBlue
-                    .edgesIgnoringSafeArea(.all)
                 VStack {
-                    Text("Filters")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .foregroundColor(.darkerblue)
-                        .italic()
+                    HStack {
+                        Image(systemName: "house.fill")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .foregroundStyle(Color.darkerblue)
+                            .padding(.leading, 15)
+                        Spacer()
+                        Text("Filters")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .foregroundColor(.darkerblue)
+                            .italic()
+                        Spacer()
+                        Image(systemName: "info.circle")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .foregroundStyle(Color.darkerblue)
+                            .padding(.trailing, 15)
+                    }
                         .background(
                             Rectangle()
-                                .frame(width: 400, height: 120)
-                                .padding(.bottom, 50)
+                                .frame(width: 400, height: 72)
                                 .foregroundColor(.white)
                         )
+
                     Spacer()
                     
                     //add the ability to set location
@@ -122,7 +135,7 @@ struct FilterView: View {
                         .shadow(radius: 2)
                         .padding(.bottom, 20)
                     //get whether they want it to be open
-                    Toggle("Only show open restaurants", isOn: $isOpen)
+                    Toggle("Only show open restaurants?", isOn: $isOpen)
                         .padding(.horizontal, 20)
                         .font(.title2)
                         .fontWeight(.bold)
@@ -139,7 +152,7 @@ struct FilterView: View {
 
             }
             
-        }
+//        }
         
         
     }
@@ -301,7 +314,7 @@ struct UserLocationBtn: View {
             useMyLocationPressed = true
         } label: {
             VStack {
-                Text("USE MY")
+                Text("CURRENT")
                 Text("LOCATION")
             }.font(.headline)
                 .italic()
@@ -370,6 +383,7 @@ struct SubmitBtn: View {
                 print("Location not available")
             }
             isSwiperViewActive = true
+            selectedTab = "2"
         }, label: {
             Text("SUBMIT")
                 .font(.title2)
@@ -387,8 +401,9 @@ struct SubmitBtn: View {
                     
                 )
                 .padding(.bottom, 20)
-        }).navigationDestination(isPresented: $isSwiperViewActive) {
-            SwiperView(vm: vm, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant, restaurants: $restaurants)
-        }
+        })
+//        .navigationDestination(isPresented: $isSwiperViewActive) {
+//            SwiperView(vm: vm, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant, restaurants: $restaurants)
+//        }
     }
 }

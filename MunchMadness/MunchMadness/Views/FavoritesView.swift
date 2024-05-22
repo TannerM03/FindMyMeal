@@ -40,11 +40,25 @@ struct FavoritesView: View {
             Color.uncBlue
             VStack {
                 if paginatedItems.count != 0 {
-                    Text("Favorites")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .italic()
-                        .foregroundStyle(.darkerblue)
+                    HStack {
+                        Image(systemName: "house.fill")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .foregroundStyle(Color.darkerblue)
+                            .padding(.leading, 15)
+                        Spacer()
+                        Text("Favorites")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .italic()
+                            .foregroundStyle(.darkerblue)
+                        Spacer()
+                        Image(systemName: "info.circle")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .foregroundStyle(Color.darkerblue)
+                            .padding(.trailing, 15)
+                    }
                         .background {
                             Rectangle()
                                 .frame(width: 500, height: 200)
@@ -143,11 +157,25 @@ struct FavoritesView: View {
                                 .foregroundStyle(Color.uncBlue)
                         }
                 } else {
+                    HStack {
+                        Image(systemName: "house.fill")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .foregroundStyle(Color.darkerblue)
+                            .padding(.leading, 15)
+                        Spacer()
                         Text("Favorites")
                             .font(.largeTitle)
                             .fontWeight(.bold)
                             .italic()
                             .foregroundStyle(.darkerblue)
+                        Spacer()
+                        Image(systemName: "info.circle")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .foregroundStyle(Color.darkerblue)
+                            .padding(.trailing, 15)
+                    }
                             .background {
                                 Rectangle()
                                     .frame(width: 500, height: 70)
@@ -160,7 +188,7 @@ struct FavoritesView: View {
                             .font(.title2)
                             .fontWeight(.bold)
                             .padding(.trailing, 10)
-                            .shadow(color:.gray, radius: 5)
+//                            .shadow(color:.gray, radius: 5)
 
                         Spacer()
                     }

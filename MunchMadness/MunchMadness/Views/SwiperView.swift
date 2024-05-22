@@ -36,15 +36,28 @@ struct SwiperView: View {
         ZStack {
             Color.uncBlue
             VStack {
-                Text("Game Time!")
-                    .padding(.top, -40)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundColor(.darkerblue)
-                    .italic()
+                HStack {
+                    Image(systemName: "house.fill")
+                        .resizable()
+                        .frame(width: 25, height: 25)
+                        .foregroundStyle(Color.darkerblue)
+                        .padding(.leading, 15)
+                    Spacer()
+                    Text("Game Time!")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundColor(.darkerblue)
+                        .italic()
+                    Spacer()
+                    Image(systemName: "info.circle")
+                        .resizable()
+                        .frame(width: 25, height: 25)
+                        .foregroundStyle(Color.darkerblue)
+                        .padding(.trailing, 15)
+                }
                     .background(
                 Rectangle()
-                    .frame(width: 400, height: 35)
+                    .frame(width: 400, height: 72)
                     .foregroundColor(.white)
             )
                 Spacer()
@@ -54,7 +67,7 @@ struct SwiperView: View {
                         Text("Loading restaurants...")
                             .font(.title2)
                             .foregroundStyle(.white)
-                            .fontWeight(.semibold)
+                            .fontWeight(.bold)
                         Spacer()
                     }
                 } else {
