@@ -17,6 +17,10 @@ struct FavoritesView: View {
     @State private var itemsPerPage: Int = 7
     
     @State private var updateTrigger: Bool = false
+    @Binding var didSubmit: Bool
+    @Environment(\.presentationMode) var presentationMode
+
+
     
     var filteredItems: [DataItem] {
             if searchTerm.isEmpty {
@@ -39,13 +43,18 @@ struct FavoritesView: View {
         ZStack {
             Color.uncBlue
             VStack {
-                if paginatedItems.count != 0 {
+                if (paginatedItems.count != 0 || !searchTerm.isEmpty) {
                     HStack {
-                        Image(systemName: "house.fill")
-                            .resizable()
-                            .frame(width: 25, height: 25)
-                            .foregroundStyle(Color.darkerblue)
-                            .padding(.leading, 15)
+                        Button {
+                            presentationMode.wrappedValue.dismiss()
+                            selectedTab = "1"
+                        }label: {
+                            Image(systemName: "house.fill")
+                                .resizable()
+                                .frame(width: 25, height: 25)
+                                .foregroundStyle(Color.darkerblue)
+                                .padding(.leading, 15)
+                        }
                         Spacer()
                         Text("Favorites")
                             .font(.largeTitle)
@@ -158,11 +167,16 @@ struct FavoritesView: View {
                         }
                 } else {
                     HStack {
-                        Image(systemName: "house.fill")
-                            .resizable()
-                            .frame(width: 25, height: 25)
-                            .foregroundStyle(Color.darkerblue)
-                            .padding(.leading, 15)
+                        Button {
+                            presentationMode.wrappedValue.dismiss()
+                            selectedTab = "1"
+                        }label: {
+                            Image(systemName: "house.fill")
+                                .resizable()
+                                .frame(width: 25, height: 25)
+                                .foregroundStyle(Color.darkerblue)
+                                .padding(.leading, 15)
+                        }
                         Spacer()
                         Text("Favorites")
                             .font(.largeTitle)
@@ -178,7 +192,7 @@ struct FavoritesView: View {
                     }
                             .background {
                                 Rectangle()
-                                    .frame(width: 500, height: 70)
+                                    .frame(width: 500, height: 72)
                                     .foregroundStyle(.white)
                             }
 
@@ -437,11 +451,14 @@ struct FavoritesView: View {
                 }
             }
         }.onAppear {
-            addItem()
+            if (didSubmit) {
+                addItem()
+            }
         }
     }
     
     func addItem() {
+        didSubmit = false
             if let restaurant = restaurant {
                 let item = DataItem(
                     id: restaurant.id,
@@ -470,9 +487,12 @@ struct FavoritesView: View {
     
     func deleteItem(_ item: DataItem) {
         context.delete(item)
+        print("deleted \(item.name)")
         do {
             try context.save()
+            print("saved")
             updateTrigger.toggle()
+            print("trigger toggle")
             } catch {
                 print("Failed to save context: \(error)")
             }

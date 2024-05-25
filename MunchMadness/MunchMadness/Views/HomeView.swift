@@ -13,6 +13,7 @@ struct HomeView: View {
     @State var vm = RestaurantListViewModel()
     @State var restaurants: [RestaurantViewModel] = []
     @State private var tabViewUp: Bool = false
+    @State var isNewSearch: Bool = false
     
     var body: some View {
         
@@ -30,10 +31,8 @@ struct HomeView: View {
                     
                     Spacer()
                     
-                    BeginButton(selectedTab: $selectedTab, vm: $vm, restaurants: $restaurants, tabViewUp: $tabViewUp)
-                        .onTapGesture {
-                            TabsView(selectedTab: $selectedTab, vm: vm, restaurants: $restaurants)
-                        }
+                    BeginButton(selectedTab: $selectedTab, vm: $vm, restaurants: $restaurants, tabViewUp: $tabViewUp, isNewSearch: $isNewSearch)
+
                     Spacer()
                 }
                 
@@ -57,9 +56,14 @@ struct BeginButton: View {
     @Binding var vm: RestaurantListViewModel
     @Binding var restaurants: [RestaurantViewModel]
     @Binding var tabViewUp: Bool
+    @Binding var isNewSearch: Bool
+    @State var topIndex = 0
+    @State var bottomIndex = 1
+    @State var searching = false
+    @State var didSubmit = false
     var body: some View {
 //        NavigationStack {
-        NavigationLink(destination: TabsView(selectedTab: $selectedTab, vm: vm, restaurants: $restaurants).navigationBarBackButtonHidden(true)) {
+        NavigationLink(destination: TabsView(selectedTab: $selectedTab, vm: vm, restaurants: $restaurants, isNewSearch: $isNewSearch, topIndex: $topIndex, bottomIndex: $bottomIndex, searching: $searching, didSubmit: $didSubmit).navigationBarBackButtonHidden(true)) {
                 Text("BEGIN")
                     .font(.title2)
                     .padding()

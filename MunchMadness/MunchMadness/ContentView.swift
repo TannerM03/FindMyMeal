@@ -11,7 +11,6 @@ struct ContentView: View {
     @StateObject var locationManager = LocationManager()
     @State private var selectedTab = "1"
     @StateObject var vm = RestaurantListViewModel()
-    @State var restaurants: [RestaurantViewModel] = []
     
     var body: some View {
         if locationManager.hasLocationAccess {

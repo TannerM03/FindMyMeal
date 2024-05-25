@@ -14,8 +14,7 @@ struct SwiperView: View {
     @State private var currentIndex: Int = 0
     @State private var offset = CGSize.zero
     @State private var offsetTwo = CGSize.zero
-    @State private var topIndex = 0
-    @State private var bottomIndex = 1
+
     @State private var rotationAngle: Double = 0
         
     @State private var tab = "3"
@@ -27,9 +26,14 @@ struct SwiperView: View {
     @Binding var restaurants: [RestaurantViewModel]
 
     
-//    @Binding var isNewSearch: Bool
-    
-//    @State private var winner: RestaurantViewModel?
+    @Binding var isNewSearch: Bool
+    @Binding var topIndex: Int
+    @Binding var bottomIndex: Int
+    @Binding var searching: Bool
+    @Binding var didSubmit: Bool
+    @Environment(\.presentationMode) var presentationMode
+    @State private var instructionsClicked = false
+
     
     
     var body: some View {
@@ -37,11 +41,17 @@ struct SwiperView: View {
             Color.uncBlue
             VStack {
                 HStack {
-                    Image(systemName: "house.fill")
-                        .resizable()
-                        .frame(width: 25, height: 25)
-                        .foregroundStyle(Color.darkerblue)
-                        .padding(.leading, 15)
+                    Button {
+                        presentationMode.wrappedValue.dismiss()
+                        selectedTab = "1"
+                    }label: {
+                        Image(systemName: "house.fill")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .foregroundStyle(Color.darkerblue)
+                            .padding(.leading, 15)
+
+                    }
                     Spacer()
                     Text("Game Time!")
                         .font(.largeTitle)
@@ -59,9 +69,9 @@ struct SwiperView: View {
                 Rectangle()
                     .frame(width: 400, height: 72)
                     .foregroundColor(.white)
-            )
+                    )
                 Spacer()
-                if restaurants.isEmpty {
+                if restaurants.isEmpty && searching == true {
                     VStack {
                         Spacer()
                         Text("Loading restaurants...")
@@ -70,7 +80,10 @@ struct SwiperView: View {
                             .fontWeight(.bold)
                         Spacer()
                     }
-                } else {
+                } else if (restaurants.isEmpty && searching == false) {
+                    Text("no restaurants found :( \n alter your search")
+                }
+                else {
                     if restaurants.count == 1 {
                         CardView(restaurant: restaurants[0])
                             .rotationEffect(.degrees(rotationAngle))
@@ -84,6 +97,7 @@ struct SwiperView: View {
                         Button {
                             savedRestaurant = restaurants[0]
                             selectedTab = "3"
+                            didSubmit = true
                             print("clicked favorites button")
                         }label: {
                             Text("Click to add to favorites")
@@ -162,6 +176,9 @@ struct SwiperView: View {
                         }
                     }
                 }
+                if (instructionsClicked) {
+                    
+                }
             }
         }.onChange(of: vm.restaurants, initial: true) { oldRestaurants, newRestaurants in
             // Update restaurants when vm.restaurants changes
@@ -169,6 +186,8 @@ struct SwiperView: View {
                 print("this ran")
                 restaurants = newRestaurants
             }
+        }.onAppear{
+            print("swiper count: \(restaurants.count)")
         }
 
     }
@@ -178,7 +197,7 @@ struct SwiperView: View {
     }
     
     private func SwipeCard(width: CGFloat) {
-//        isNewSearch = false
+        isNewSearch = false
         withAnimation(.easeInOut(duration: 0.2)) {
             switch width {
             case -500...(-120):
@@ -197,7 +216,7 @@ struct SwiperView: View {
         
     }
     private func SwipeSecondCard(width: CGFloat) {
-//        isNewSearch = false
+        isNewSearch = false
         withAnimation(.easeInOut(duration: 0.2)) {
             switch width {
             case -500...(-120):

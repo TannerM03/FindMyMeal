@@ -36,46 +36,27 @@ struct FilterView: View {
     @State private var selectLocationPressed = false
     @State private var useMyLocationPressed = false
     
-    @State private var isNewSearch = false
     
     @Binding var selectedTab: String
     
     @Binding var savedRestaurant: RestaurantViewModel?
     
     @Binding var restaurants: [RestaurantViewModel]
+    @Binding var isNewSearch: Bool
+    @Binding var topIndex: Int
+    @Binding var bottomIndex: Int
+    @Binding var searching: Bool
+    @Environment(\.presentationMode) var presentationMode
+    @State private var showTitle = true
 
-    
+
             
     var body: some View {
         
-//        NavigationStack {
+        NavigationStack {
             ZStack {
                 Color.uncBlue
                 VStack {
-                    HStack {
-                        Image(systemName: "house.fill")
-                            .resizable()
-                            .frame(width: 25, height: 25)
-                            .foregroundStyle(Color.darkerblue)
-                            .padding(.leading, 15)
-                        Spacer()
-                        Text("Filters")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .foregroundColor(.darkerblue)
-                            .italic()
-                        Spacer()
-                        Image(systemName: "info.circle")
-                            .resizable()
-                            .frame(width: 25, height: 25)
-                            .foregroundStyle(Color.darkerblue)
-                            .padding(.trailing, 15)
-                    }
-                        .background(
-                            Rectangle()
-                                .frame(width: 400, height: 72)
-                                .foregroundColor(.white)
-                        )
 
                     Spacer()
                     
@@ -90,7 +71,7 @@ struct FilterView: View {
                             .shadow(color:.gray, radius: 5)
                             .italic()
                         
-                        SelectLocationBtn(usingPersonalLocation: $usingPersonalLocation, mapView: $mapView, selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude, selectLocationPressed: $selectLocationPressed, useMyLocationPressed: $useMyLocationPressed)
+                        SelectLocationBtn(usingPersonalLocation: $usingPersonalLocation, mapView: $mapView, selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude, selectLocationPressed: $selectLocationPressed, useMyLocationPressed: $useMyLocationPressed, showTitle: $showTitle, selectedTab: $selectedTab)
                         
                     }
                     .padding(.bottom, 30)
@@ -135,8 +116,8 @@ struct FilterView: View {
                         .shadow(radius: 2)
                         .padding(.bottom, 20)
                     //get whether they want it to be open
-                    Toggle("Only show open restaurants?", isOn: $isOpen)
-                        .padding(.horizontal, 20)
+                    Toggle("Only open restaurants?", isOn: $isOpen)
+                        .padding(.horizontal, 33)
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(.white)
@@ -145,14 +126,46 @@ struct FilterView: View {
                         .padding(.bottom, 20)
                     
                     //submit button that takes you to SwiperView()
-                    SubmitBtn(distance: $distance, userMood: $userMood, prices: $prices, usingPersonalLocation: $usingPersonalLocation, radius: $radius, isSwiperViewActive: $isSwiperViewActive, isOpen: $isOpen, latitude: $latitude, longitude: $longitude, selectedLongitude: $selectedLongitude, selectedLatitude: $selectedLatitude, isNewSearch: $isNewSearch, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant, restaurants: $restaurants)
+                    SubmitBtn(distance: $distance, userMood: $userMood, prices: $prices, usingPersonalLocation: $usingPersonalLocation, radius: $radius, isSwiperViewActive: $isSwiperViewActive, isOpen: $isOpen, latitude: $latitude, longitude: $longitude, selectedLongitude: $selectedLongitude, selectedLatitude: $selectedLatitude, isNewSearch: $isNewSearch, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant, restaurants: $restaurants, topIndex: $topIndex, bottomIndex: $bottomIndex, searching: $searching)
                     
                     Spacer()
                 }
-
-            }
+                .padding(.top, 91)
+            }.padding(.top, -91)
             
-//        }
+        }.overlay {
+            if showTitle {
+                HStack {
+                    Button {
+                        presentationMode.wrappedValue.dismiss()
+                        selectedTab = "1"
+                    }label: {
+                        Image(systemName: "house.fill")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .foregroundStyle(Color.darkerblue)
+                            .padding(.leading, 15)
+                    }
+                    Spacer()
+                    Text("Filters")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundColor(.darkerblue)
+                        .italic()
+                    Spacer()
+                    Image(systemName: "info.circle")
+                        .resizable()
+                        .frame(width: 25, height: 25)
+                        .foregroundStyle(Color.darkerblue)
+                        .padding(.trailing, 15)
+                }
+                .background {
+                    Rectangle()
+                        .frame(width: 400, height: 72)
+                        .foregroundColor(.white)
+                }.padding(.bottom, 669)
+            }
+        }
         
         
     }
@@ -249,6 +262,8 @@ struct SelectLocationBtn: View {
     @Binding var selectedLongitude: CLLocationDegrees
     @Binding var selectLocationPressed: Bool
     @Binding var useMyLocationPressed: Bool
+    @Binding var showTitle: Bool
+    @Binding var selectedTab: String
     
     var body: some View {
         Button {
@@ -256,6 +271,7 @@ struct SelectLocationBtn: View {
             selectLocationPressed = true
             useMyLocationPressed = false
             mapView.toggle()
+            showTitle = false
         } label: {
             VStack {
                 Text("SELECT")
@@ -275,7 +291,7 @@ struct SelectLocationBtn: View {
                             )
                         
                     ).navigationDestination(isPresented: $mapView) {
-                        SelectLocationView(selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude)
+                        SelectLocationView(selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude, showTitle: $showTitle, selectedTab: $selectedTab).toolbar(.hidden)
                     }
         }
     }
@@ -354,6 +370,9 @@ struct SubmitBtn: View {
     
     @Binding var savedRestaurant: RestaurantViewModel?
     @Binding var restaurants: [RestaurantViewModel]
+    @Binding var topIndex: Int
+    @Binding var bottomIndex: Int
+    @Binding var searching: Bool
 
 
     var body: some View {
@@ -361,6 +380,9 @@ struct SubmitBtn: View {
         @State var profile = false
         
         Button(action: {
+            searching = true
+            topIndex = 0
+            bottomIndex = 1
             restaurants = []
             isNewSearch = true
             radius = distance * 1600
@@ -370,19 +392,24 @@ struct SubmitBtn: View {
                     print("restaurants before getPlaces: \(restaurants)")
                 Task {
                     restaurants = await vm.getPlaces(with: userMood, longitude: longitude, latitude: latitude, radius: radius, openNow: isOpen, prices: prices)
-                }
                     print("restaurants after getPlaces: \(restaurants) + isSwiperViewActice: \(isSwiperViewActive)")
                     print("after set to true: \(isSwiperViewActive) + restaurants: \(restaurants)")
+                    searching = false
+                }
+
             }
             else if usingPersonalLocation == false {
                 Task {
                     restaurants = await vm.getPlaces(with: userMood, longitude: selectedLongitude, latitude: selectedLatitude, radius: radius, openNow: isOpen, prices: prices)
+                    searching = false
                 }
             }
             else {
                 print("Location not available")
+                searching = false
             }
             isSwiperViewActive = true
+            print("filters count: \(restaurants.count)")
             selectedTab = "2"
         }, label: {
             Text("SUBMIT")

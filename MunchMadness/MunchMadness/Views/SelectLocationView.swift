@@ -28,6 +28,9 @@ struct SelectLocationView: View {
     @State private var swiperTime: Bool = false
     
     @State private var searched: Bool = false
+    @Binding var showTitle: Bool
+    @Binding var selectedTab: String
+    @State private var dismissView: Bool = false
     
     var body: some View {
         NavigationView {
@@ -40,44 +43,66 @@ struct SelectLocationView: View {
             .overlay(alignment: .top) {
                 VStack {
                     //user input location
-                    TextField("Search for city or address", text: $searchText)
-                        .font(.subheadline)
-                        .padding(12)
-                        .background(.white)
-                        .padding()
-                        .shadow(radius: 10)
-                        .overlay(alignment: .trailing) {
+                    VStack(alignment: .leading) {
+                        HStack {
                             Button {
-                                searched = true
-                                
-                                Task { await searchPlaces()
-                                    if let firstItem = results.first {
-                                        var resultLocation: CLLocationCoordinate2D {
-                                            return .init(latitude: firstItem.placemark.coordinate.latitude, longitude: firstItem.placemark.coordinate.longitude)
-                                        }
-                                        var resultRegion: MKCoordinateRegion {
-                                            return .init(center: resultLocation,
-                                                         latitudinalMeters: 10000, longitudinalMeters: 10000)
-                                        }
-                                        cameraPosition = .region(resultRegion)
-                                        selectedLatitude = firstItem.placemark.coordinate.latitude
-                                        selectedLongitude = firstItem.placemark.coordinate.longitude
-                                        print("Latitude: \(firstItem.placemark.coordinate.latitude)")
-                                        print("Longitude: \(firstItem.placemark.coordinate.longitude)")
-                                        
-                                    }
+                                if selectedTab == "1" {
+                                    showTitle = true
                                 }
+                                presentationMode.wrappedValue.dismiss()
                             }label: {
-                                Text("Search")
-                                    .padding(.vertical, 12)
-                                    .padding(.horizontal, 5)
-                                    .font(.subheadline)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 1)
-                                            .fill(Color.uncBlue)
-                                    )
-                            }.padding(.trailing, 17)
-                        }
+                                Image(systemName: "chevron.left")
+                                Text("Back")
+                                    .padding(0)
+                            }
+                        }.foregroundStyle(Color.darkerblue)
+                        .padding(.leading, 20)
+                        TextField("Search for city or address", text: $searchText)
+                            .font(.subheadline)
+                            .padding(12)
+                            .background{
+                                Rectangle()
+                                    .fill(.white)
+                                }
+                            .padding()
+                            .shadow(radius: 10)
+                        
+                            .overlay(alignment: .trailing) {
+                                Button {
+                                    searched = true
+                                    print("searched")
+                                    
+                                    Task { await searchPlaces()
+                                        if let firstItem = results.first {
+                                            var resultLocation: CLLocationCoordinate2D {
+                                                return .init(latitude: firstItem.placemark.coordinate.latitude, longitude: firstItem.placemark.coordinate.longitude)
+                                            }
+                                            var resultRegion: MKCoordinateRegion {
+                                                return .init(center: resultLocation,
+                                                             latitudinalMeters: 10000, longitudinalMeters: 10000)
+                                            }
+                                            cameraPosition = .region(resultRegion)
+                                            selectedLatitude = firstItem.placemark.coordinate.latitude
+                                            selectedLongitude = firstItem.placemark.coordinate.longitude
+                                            print("Latitude: \(firstItem.placemark.coordinate.latitude)")
+                                            print("Longitude: \(firstItem.placemark.coordinate.longitude)")
+                                            
+                                        }
+                                    }
+                                }label: {
+                                    Text("Search")
+                                        .padding(.vertical, 12)
+                                        .padding(.horizontal, 5)
+                                        .font(.subheadline)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 1)
+                                                .fill(Color.uncBlue)
+                                        )
+                                }.padding(.trailing, 17)
+                                
+                            }
+                    }.padding(.top, 10)
+
                     Spacer()
                     //button that gets latitude and longitude, brings you back to the filters page
                     if searched == true {
@@ -92,6 +117,7 @@ struct SelectLocationView: View {
                                     print("Longitude: \(selectedLongitude)")
                             }
                             presentationMode.wrappedValue.dismiss()
+                            showTitle = true
                         }, label: {
                             Text("Submit")
                         })
@@ -109,6 +135,7 @@ struct SelectLocationView: View {
                                 
                             )
                             .padding(.bottom, 20)
+                        
                     }
                     
 
@@ -135,6 +162,11 @@ struct SelectLocationView: View {
                     }
                 }
             }
+//            .onDisappear {
+//                if selectedTab == "1" {
+//                    showTitle = true
+//                }
+//            }
         }
     }
 }
@@ -170,6 +202,18 @@ extension MKCoordinateRegion {
 }
 
 
-//#Preview {
-//    SelectLocationView(selectedLatitude: 40.7128, selectedLongitude: -74.0060 )
-//}
+struct SelectLocationView_Previews: PreviewProvider {
+    @State static var selectedLatitude: CLLocationDegrees = 40.7128
+    @State static var selectedLongitude: CLLocationDegrees = -74.0060
+    @State static var showTitle: Bool = false
+    @State static var selectedTab: String = "1"
+
+    static var previews: some View {
+        SelectLocationView(
+            selectedLatitude: $selectedLatitude,
+            selectedLongitude: $selectedLongitude,
+            showTitle: $showTitle,
+            selectedTab: $selectedTab
+        )
+    }
+}

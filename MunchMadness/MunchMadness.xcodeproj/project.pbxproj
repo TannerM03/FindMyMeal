@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E3405A462C01848300317CF0 /* InstructionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3405A452C01848300317CF0 /* InstructionsView.swift */; };
 		E34BAD1C2BD8077C0002D7BA /* DataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E34BAD1B2BD8077C0002D7BA /* DataItem.swift */; };
 		E3BC33ED2B9A7FE700FFBA53 /* MunchMadnessApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BC33EC2B9A7FE700FFBA53 /* MunchMadnessApp.swift */; };
 		E3BC33EF2B9A7FE700FFBA53 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BC33EE2B9A7FE700FFBA53 /* ContentView.swift */; };
@@ -33,6 +34,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E3405A452C01848300317CF0 /* InstructionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsView.swift; sourceTree = "<group>"; };
 		E34BAD1B2BD8077C0002D7BA /* DataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataItem.swift; sourceTree = "<group>"; };
 		E3BC33E92B9A7FE700FFBA53 /* MunchMadness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MunchMadness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3BC33EC2B9A7FE700FFBA53 /* MunchMadnessApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MunchMadnessApp.swift; sourceTree = "<group>"; };
@@ -137,10 +139,11 @@
 				E3BC34062BA73E4F00FFBA53 /* CardView.swift */,
 				E3DB658B2BC63DA400DFB606 /* ImageView.swift */,
 				E3BC340B2BA74D0B00FFBA53 /* HomeView.swift */,
+				E3BC34132BA7A13900FFBA53 /* FilterView.swift */,
 				E3BC340D2BA74F3500FFBA53 /* SwiperView.swift */,
 				E3BC34112BA7A12E00FFBA53 /* FavoritesView.swift */,
-				E3BC34132BA7A13900FFBA53 /* FilterView.swift */,
 				E3DB65432BBD10BA00DFB606 /* SelectLocationView.swift */,
+				E3405A452C01848300317CF0 /* InstructionsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -245,6 +248,7 @@
 				E3BC340E2BA74F3500FFBA53 /* SwiperView.swift in Sources */,
 				E3BC34072BA73E4F00FFBA53 /* CardView.swift in Sources */,
 				E3BC34102BA7539100FFBA53 /* RestaurantListViewModel.swift in Sources */,
+				E3405A462C01848300317CF0 /* InstructionsView.swift in Sources */,
 				E3BC340C2BA74D0B00FFBA53 /* HomeView.swift in Sources */,
 				E3BC34122BA7A12E00FFBA53 /* FavoritesView.swift in Sources */,
 				E3BC33EF2B9A7FE700FFBA53 /* ContentView.swift in Sources */,
