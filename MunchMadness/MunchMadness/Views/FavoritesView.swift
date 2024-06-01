@@ -19,6 +19,7 @@ struct FavoritesView: View {
     @State private var updateTrigger: Bool = false
     @Binding var didSubmit: Bool
     @Environment(\.presentationMode) var presentationMode
+    @State private var instructionsClicked = false
 
 
     
@@ -62,11 +63,15 @@ struct FavoritesView: View {
                             .italic()
                             .foregroundStyle(.darkerblue)
                         Spacer()
-                        Image(systemName: "info.circle")
-                            .resizable()
-                            .frame(width: 25, height: 25)
-                            .foregroundStyle(Color.darkerblue)
-                            .padding(.trailing, 15)
+                        Button {
+                            instructionsClicked = true
+                        }label: {
+                            Image(systemName: "info.circle")
+                                .resizable()
+                                .frame(width: 25, height: 25)
+                                .foregroundStyle(Color.darkerblue)
+                                .padding(.trailing, 15)
+                        }
                     }
                         .background {
                             Rectangle()
@@ -184,11 +189,15 @@ struct FavoritesView: View {
                             .italic()
                             .foregroundStyle(.darkerblue)
                         Spacer()
-                        Image(systemName: "info.circle")
-                            .resizable()
-                            .frame(width: 25, height: 25)
-                            .foregroundStyle(Color.darkerblue)
-                            .padding(.trailing, 15)
+                        Button {
+                            instructionsClicked = true
+                        }label: {
+                            Image(systemName: "info.circle")
+                                .resizable()
+                                .frame(width: 25, height: 25)
+                                .foregroundStyle(Color.darkerblue)
+                                .padding(.trailing, 15)
+                        }
                     }
                             .background {
                                 Rectangle()
@@ -207,6 +216,30 @@ struct FavoritesView: View {
                         Spacer()
                     }
 
+            }.overlay {
+                if (instructionsClicked) {
+                    Color.black.opacity(0.3).ignoresSafeArea()
+                    InstructionsView(selectedTab: $selectedTab)
+                        .padding(6)
+                        .multilineTextAlignment(.leading)
+                        .frame(width: 350, height: 500, alignment: .topLeading)
+                        .background {
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color.black, lineWidth: 1)
+                                .fill(Color.white)
+                        }.overlay(alignment: .topTrailing) {
+                            Button {
+                                instructionsClicked = false
+                            }label: {
+                                Image(systemName: "xmark.circle")
+                                    .resizable()
+                                    .frame(width: 25, height: 25)
+                                    .padding(.top, 20)
+                                    .padding(.trailing, 10)
+                            }.padding(.trailing, 15)
+                                .padding(.top, 10)
+                        }
+                }
             }
         }
         .sheet(item: $selectedItem) { selectedItem in

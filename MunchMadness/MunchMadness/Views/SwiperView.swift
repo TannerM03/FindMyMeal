@@ -33,6 +33,7 @@ struct SwiperView: View {
     @Binding var didSubmit: Bool
     @Environment(\.presentationMode) var presentationMode
     @State private var instructionsClicked = false
+    @Binding var firstSearch: Bool
 
     
     
@@ -59,11 +60,15 @@ struct SwiperView: View {
                         .foregroundColor(.darkerblue)
                         .italic()
                     Spacer()
-                    Image(systemName: "info.circle")
-                        .resizable()
-                        .frame(width: 25, height: 25)
-                        .foregroundStyle(Color.darkerblue)
-                        .padding(.trailing, 15)
+                    Button {
+                        instructionsClicked = true
+                    } label: {
+                        Image(systemName: "info.circle")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .foregroundStyle(Color.darkerblue)
+                            .padding(.trailing, 15)
+                    }
                 }
                     .background(
                 Rectangle()
@@ -71,7 +76,18 @@ struct SwiperView: View {
                     .foregroundColor(.white)
                     )
                 Spacer()
-                if restaurants.isEmpty && searching == true {
+                if (firstSearch) {
+                    VStack(alignment: .center) {
+                        Spacer()
+                        Text("Choose filters to search for restaurants!")
+                            .multilineTextAlignment(.center)
+                            .font(.title2)
+                            .foregroundStyle(.white)
+                            .fontWeight(.bold)
+                        Spacer()
+                    }
+                }
+                else if restaurants.isEmpty && searching == true {
                     VStack {
                         Spacer()
                         Text("Loading restaurants...")
@@ -81,7 +97,18 @@ struct SwiperView: View {
                         Spacer()
                     }
                 } else if (restaurants.isEmpty && searching == false) {
-                    Text("no restaurants found :( \n alter your search")
+                    VStack(alignment: .center) {
+                        Spacer()
+                        Text("No restaurants found :(")
+                            .font(.title2)
+                            .foregroundStyle(.white)
+                            .fontWeight(.bold)
+                        Text("Try altering your search")
+                            .font(.title2)
+                            .foregroundStyle(.white)
+                            .fontWeight(.bold)
+                        Spacer()
+                    }
                 }
                 else {
                     if restaurants.count == 1 {
@@ -176,8 +203,29 @@ struct SwiperView: View {
                         }
                     }
                 }
+            }.overlay {
                 if (instructionsClicked) {
-                    
+                    Color.black.opacity(0.3).edgesIgnoringSafeArea(.all)
+                    InstructionsView(selectedTab: $selectedTab)
+                        .padding(6)
+                        .multilineTextAlignment(.leading)
+                        .frame(width: 350, height: 500, alignment: .topLeading)
+                        .background {
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color.black, lineWidth: 1)
+                                .fill(Color.white)
+                        }.overlay(alignment: .topTrailing) {
+                            Button {
+                                instructionsClicked = false
+                            }label: {
+                                Image(systemName: "xmark.circle")
+                                    .resizable()
+                                    .frame(width: 25, height: 25)
+                                    .padding(.top, 20)
+                                    .padding(.trailing, 10)
+                            }.padding(.trailing, 15)
+                                .padding(.top, 10)
+                        }
                 }
             }
         }.onChange(of: vm.restaurants, initial: true) { oldRestaurants, newRestaurants in

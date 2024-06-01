@@ -10,7 +10,8 @@ import CoreLocation
 
 struct FilterView: View {
 
-    @State private var distance = 1
+    @State private var distance = 5
+    @State private var limit = 10
     @State private var radius = 0
     
     @State private var prices: [Int] = [1]
@@ -21,7 +22,7 @@ struct FilterView: View {
     @State var selectedLongitude: CLLocationDegrees = 0
     @State var selectedLatitude: CLLocationDegrees = 0
     
-    @State private var usingPersonalLocation = false
+    @State private var usingPersonalLocation = true
     
     @State private var isEditing = false
     @State private var isOpen = true
@@ -34,7 +35,7 @@ struct FilterView: View {
     @State private var mapView: Bool = false
     
     @State private var selectLocationPressed = false
-    @State private var useMyLocationPressed = false
+    @State private var useMyLocationPressed = true
     
     
     @Binding var selectedTab: String
@@ -48,8 +49,9 @@ struct FilterView: View {
     @Binding var searching: Bool
     @Environment(\.presentationMode) var presentationMode
     @State private var showTitle = true
-
-
+    @State private var instructionsClicked = true
+    
+    @Binding var firstSearch: Bool
             
     var body: some View {
         
@@ -74,21 +76,22 @@ struct FilterView: View {
                         SelectLocationBtn(usingPersonalLocation: $usingPersonalLocation, mapView: $mapView, selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude, selectLocationPressed: $selectLocationPressed, useMyLocationPressed: $useMyLocationPressed, showTitle: $showTitle, selectedTab: $selectedTab)
                         
                     }
-                    .padding(.bottom, 30)
+                    .padding(.bottom, 20)
+                    .padding(.top, -15)
                     
                     
                     //get distance parameter
                     HStack {
-                        Text("How far are you willing \nto go?")
+                        Text("Maximum distance?")
                             .foregroundColor(.white)
                             .font(.title2)
                             .fontWeight(.bold)
-                            .padding(.trailing, 10)
+                            .padding(.trailing, 45)
                             .shadow(color:.gray, radius: 5)
                         
                         DistancePicker(distance: $distance)
                         
-                    }.padding(.bottom, 30)
+                    }.padding(.bottom, 20)
                     
                     //get price range
                     Text("Price Range:")
@@ -99,6 +102,17 @@ struct FilterView: View {
                         .padding(.trailing, 200)
                     
                     PricesFilter(prices: $prices)
+                    
+                    HStack {
+                        Text("Max number of options?")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                            .shadow(color:.gray, radius: 5)
+                        Spacer()
+                        CountPicker(count: $limit)
+                    }.frame(width: 328)
+                    .padding(.bottom, 20)
                     
                     
                     //get terms
@@ -117,7 +131,7 @@ struct FilterView: View {
                         .padding(.bottom, 20)
                     //get whether they want it to be open
                     Toggle("Only open restaurants?", isOn: $isOpen)
-                        .padding(.horizontal, 33)
+                        .padding(.horizontal, 34)
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(.white)
@@ -125,16 +139,45 @@ struct FilterView: View {
                         .tint(Color.darkerblue)
                         .padding(.bottom, 20)
                     
+
+                    
                     //submit button that takes you to SwiperView()
-                    SubmitBtn(distance: $distance, userMood: $userMood, prices: $prices, usingPersonalLocation: $usingPersonalLocation, radius: $radius, isSwiperViewActive: $isSwiperViewActive, isOpen: $isOpen, latitude: $latitude, longitude: $longitude, selectedLongitude: $selectedLongitude, selectedLatitude: $selectedLatitude, isNewSearch: $isNewSearch, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant, restaurants: $restaurants, topIndex: $topIndex, bottomIndex: $bottomIndex, searching: $searching)
+                    SubmitBtn(distance: $distance, userMood: $userMood, prices: $prices, usingPersonalLocation: $usingPersonalLocation, radius: $radius, isSwiperViewActive: $isSwiperViewActive, isOpen: $isOpen, latitude: $latitude, longitude: $longitude, selectedLongitude: $selectedLongitude, selectedLatitude: $selectedLatitude, isNewSearch: $isNewSearch, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant, restaurants: $restaurants, topIndex: $topIndex, bottomIndex: $bottomIndex, searching: $searching, firstSearch: $firstSearch, limit: $limit)
                     
                     Spacer()
                 }
                 .padding(.top, 91)
+                .overlay {
+                    if (instructionsClicked) {
+                        Color.black.opacity(0.3).edgesIgnoringSafeArea(.all)
+                        InstructionsView(selectedTab: $selectedTab)
+                            .padding(6)
+                            .multilineTextAlignment(.leading)
+                            .frame(width: 350, height: 500, alignment: .topLeading)
+                            .background {
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.black, lineWidth: 1)
+                                    .fill(Color.white)
+                            }.overlay(alignment: .topTrailing) {
+                                Button {
+                                    instructionsClicked = false
+                                }label: {
+                                    Image(systemName: "xmark.circle")
+                                        .resizable()
+                                        .frame(width: 25, height: 25)
+                                        .padding(.top, 20)
+                                        .padding(.trailing, 10)
+                                }.padding(.trailing, 15)
+                                    .padding(.top, 10)
+                            }
+                    }
+                }
             }.padding(.top, -91)
             
         }.overlay {
             if showTitle {
+
+                
                 HStack {
                     Button {
                         presentationMode.wrappedValue.dismiss()
@@ -153,16 +196,23 @@ struct FilterView: View {
                         .foregroundColor(.darkerblue)
                         .italic()
                     Spacer()
-                    Image(systemName: "info.circle")
-                        .resizable()
-                        .frame(width: 25, height: 25)
-                        .foregroundStyle(Color.darkerblue)
-                        .padding(.trailing, 15)
+                    Button {
+                        instructionsClicked = true
+                    }label: {
+                        Image(systemName: "info.circle")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .foregroundStyle(Color.darkerblue)
+                            .padding(.trailing, 15)
+                    }
                 }
                 .background {
                     Rectangle()
                         .frame(width: 400, height: 72)
                         .foregroundColor(.white)
+                    if instructionsClicked {
+                        Color.black.opacity(0.3)
+                    }
                 }.padding(.bottom, 669)
             }
         }
@@ -248,6 +298,19 @@ struct DistancePicker: View {
         Picker("Distance", selection: $distance) {
             ForEach(1...25, id: \.self) { mile in
                 Text("\(mile) mi")
+            }
+        }.background(Color.white)
+            .cornerRadius(20)
+            .accentColor(.black)
+    }
+}
+
+struct CountPicker: View {
+    @Binding var count: Int
+    var body: some View {
+        Picker("Count", selection: $count) {
+            ForEach(5...50, id: \.self) { count in
+                Text("\(count)")
             }
         }.background(Color.white)
             .cornerRadius(20)
@@ -373,13 +436,15 @@ struct SubmitBtn: View {
     @Binding var topIndex: Int
     @Binding var bottomIndex: Int
     @Binding var searching: Bool
-
-
+    @Binding var firstSearch: Bool
+    @Binding var limit: Int
+    
     var body: some View {
 
         @State var profile = false
         
         Button(action: {
+            firstSearch = false
             searching = true
             topIndex = 0
             bottomIndex = 1
@@ -391,7 +456,7 @@ struct SubmitBtn: View {
             if usingPersonalLocation == true {
                     print("restaurants before getPlaces: \(restaurants)")
                 Task {
-                    restaurants = await vm.getPlaces(with: userMood, longitude: longitude, latitude: latitude, radius: radius, openNow: isOpen, prices: prices)
+                    restaurants = await vm.getPlaces(with: userMood, longitude: longitude, latitude: latitude, radius: radius, openNow: isOpen, prices: prices, limit: limit)
                     print("restaurants after getPlaces: \(restaurants) + isSwiperViewActice: \(isSwiperViewActive)")
                     print("after set to true: \(isSwiperViewActive) + restaurants: \(restaurants)")
                     searching = false
@@ -400,7 +465,7 @@ struct SubmitBtn: View {
             }
             else if usingPersonalLocation == false {
                 Task {
-                    restaurants = await vm.getPlaces(with: userMood, longitude: selectedLongitude, latitude: selectedLatitude, radius: radius, openNow: isOpen, prices: prices)
+                    restaurants = await vm.getPlaces(with: userMood, longitude: selectedLongitude, latitude: selectedLatitude, radius: radius, openNow: isOpen, prices: prices, limit: limit)
                     searching = false
                 }
             }

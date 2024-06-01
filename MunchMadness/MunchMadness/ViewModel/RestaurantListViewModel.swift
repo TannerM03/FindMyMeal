@@ -26,7 +26,7 @@ class RestaurantListViewModel: ObservableObject {
     @Published var errorMessage: String = ""
     @Published var isLoading: Bool = false
   
-    func getPlaces(with term: String, longitude: CLLocationDegrees, latitude: CLLocationDegrees, radius: Int, openNow: Bool, prices: [Int]) async -> [RestaurantViewModel] {
+    func getPlaces(with term: String, longitude: CLLocationDegrees, latitude: CLLocationDegrees, radius: Int, openNow: Bool, prices: [Int], limit: Int) async -> [RestaurantViewModel] {
         DispatchQueue.main.async {
             self.term = term
             self.longitude = longitude
@@ -35,6 +35,7 @@ class RestaurantListViewModel: ObservableObject {
             self.openNow = openNow
             self.prices = prices
             self.isLoading = true
+            self.limit = limit
         }
 
         do {
