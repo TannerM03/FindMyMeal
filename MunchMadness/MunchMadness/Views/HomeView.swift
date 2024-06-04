@@ -20,19 +20,24 @@ struct HomeView: View {
         
         NavigationView {
             ZStack {
-                Color.uncBlue
-                    .edgesIgnoringSafeArea(.all)
+//                Color.uncBlue
+//                    .edgesIgnoringSafeArea(.all)
+                Image("HomeBackground")
+                    .resizable()
+                    .scaledToFill()
+                    .ignoresSafeArea()
                 
                 VStack {
-                    Text("MUNCH MADNESS")
-                        .font(.largeTitle)
-                        .fontWeight(.heavy)
-                        .padding(.top, 50)
+//                    Text("FindMyMeal")
+//                        .font(.largeTitle)
+//                        .fontWeight(.heavy)
+//                        .padding(.top, 50)
                     
                     
                     Spacer()
                     
                     BeginButton(selectedTab: $selectedTab, vm: $vm, restaurants: $restaurants, tabViewUp: $tabViewUp, isNewSearch: $isNewSearch, firstSearch: $firstSearch)
+                        .offset(y: 200)
 
                     Spacer()
                 }
@@ -69,15 +74,15 @@ struct BeginButton: View {
                 Text("BEGIN")
                     .font(.title2)
                     .padding()
-                    .foregroundColor(.black)
+                    .foregroundColor(Color.darkerblue)
                     .frame(width: 150, height: 60)
                     .background(
                         RoundedRectangle(cornerRadius: 40)
                             .fill(Color.white)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 40)
-                                    .stroke(Color.black, lineWidth: 1)
-                            )
+//                            .overlay(
+//                                RoundedRectangle(cornerRadius: 40)
+//                                    .stroke(Color.black, lineWidth: 1)
+//                            )
                         
                     )
             }

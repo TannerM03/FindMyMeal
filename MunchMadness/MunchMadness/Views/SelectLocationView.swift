@@ -31,6 +31,7 @@ struct SelectLocationView: View {
     @Binding var showTitle: Bool
     @Binding var selectedTab: String
     @State private var dismissView: Bool = false
+    @Binding var locationPressed: Bool
     
     var body: some View {
         NavigationView {
@@ -58,6 +59,7 @@ struct SelectLocationView: View {
                         }.foregroundStyle(Color.darkerblue)
                         .padding(.leading, 20)
                         TextField("Search for city or address", text: $searchText)
+                            .foregroundStyle(Color.black)
                             .font(.subheadline)
                             .padding(12)
                             .background{
@@ -118,6 +120,7 @@ struct SelectLocationView: View {
                             }
                             presentationMode.wrappedValue.dismiss()
                             showTitle = true
+                            locationPressed = true
                         }, label: {
                             Text("Submit")
                         })
@@ -162,12 +165,8 @@ struct SelectLocationView: View {
                     }
                 }
             }
-//            .onDisappear {
-//                if selectedTab == "1" {
-//                    showTitle = true
-//                }
-//            }
-        }
+
+        }.preferredColorScheme(.light)
     }
 }
 
@@ -207,13 +206,15 @@ struct SelectLocationView_Previews: PreviewProvider {
     @State static var selectedLongitude: CLLocationDegrees = -74.0060
     @State static var showTitle: Bool = false
     @State static var selectedTab: String = "1"
+    @State static var locationPressed: Bool = true
 
     static var previews: some View {
         SelectLocationView(
             selectedLatitude: $selectedLatitude,
             selectedLongitude: $selectedLongitude,
             showTitle: $showTitle,
-            selectedTab: $selectedTab
+            selectedTab: $selectedTab,
+            locationPressed: $locationPressed
         )
     }
 }

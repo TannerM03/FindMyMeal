@@ -42,203 +42,208 @@ struct FavoritesView: View {
     
     var body: some View {
         ZStack {
-            Color.uncBlue
-            VStack {
-                if (paginatedItems.count != 0 || !searchTerm.isEmpty) {
-                    HStack {
-                        Button {
-                            presentationMode.wrappedValue.dismiss()
-                            selectedTab = "1"
-                        }label: {
-                            Image(systemName: "house.fill")
-                                .resizable()
-                                .frame(width: 25, height: 25)
-                                .foregroundStyle(Color.darkerblue)
-                                .padding(.leading, 15)
+//            Color.uncBlue
+            LinearGradient(gradient: Gradient(colors:[Color.uncBlue, Color.darkerblue]), startPoint: UnitPoint(x: 0.5, y: 0.5), endPoint: .bottom)
+            GeometryReader { geometry in
+                VStack {
+                    if (paginatedItems.count != 0 || !searchTerm.isEmpty) {
+                        HStack {
+                            Button {
+                                presentationMode.wrappedValue.dismiss()
+                                selectedTab = "1"
+                            }label: {
+                                Image(systemName: "house.fill")
+                                    .resizable()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.darkerblue)
+                                    .padding(.leading, 15)
+                            }
+                            Spacer()
+                            Text("Favorites")
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
+                            //                            .italic()
+                                .foregroundStyle(.darkerblue)
+                            Spacer()
+                            Button {
+                                instructionsClicked = true
+                            }label: {
+                                Image(systemName: "info.circle")
+                                    .resizable()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.darkerblue)
+                                    .padding(.trailing, 15)
+                            }
                         }
-                        Spacer()
-                        Text("Favorites")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .italic()
-                            .foregroundStyle(.darkerblue)
-                        Spacer()
-                        Button {
-                            instructionsClicked = true
-                        }label: {
-                            Image(systemName: "info.circle")
-                                .resizable()
-                                .frame(width: 25, height: 25)
-                                .foregroundStyle(Color.darkerblue)
-                                .padding(.trailing, 15)
-                        }
-                    }
                         .background {
                             Rectangle()
-                                .frame(width: 500, height: 200)
+                                .frame(width: 600, height: 200)
                                 .foregroundStyle(.white)
                         }
-                    TextField("Search by restaurant name or city", text: $searchTerm)
-                        .font(.subheadline)
-                        .padding(12)
-                        .background(.white)
-                        .padding()
-                        .shadow(radius: 10)
-                        .background {
-                            Rectangle()
-                                .frame(width: 500, height: 86)
-                                .foregroundStyle(Color.uncBlue)
-                        }.overlay(alignment: .trailing) {
-                            Button {
-                                searchTerm = ""
-                            }label: {
-                                Image(systemName: "xmark.circle.fill")
-                                    .resizable()
-                                    .frame(width: 20, height: 20)
-                                    .foregroundStyle(.gray)
-                                    .padding(.trailing, 25)
-                            }.onTapGesture {
-                                //swipe down keyboard
-                            }
-                        }
-                    List() {
-                        ForEach(paginatedItems) { item in
-                            if (item.name.lowercased().contains(searchTerm.lowercased()) || item.city.lowercased().contains(searchTerm.lowercased()) || searchTerm == "") {
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        Text(item.name)
-                                        Text("\(item.city), \(item.state ?? "")")
-                                            .font(.footnote)
-                                    }
-                                    Spacer()
-                                    ImageView(urlString: item.imageUrl)
-                                        .frame(width: 50, height: 36)
-                                        .cornerRadius(5)
-                                        .padding(.trailing, 10)
-                                }
-                                .contentShape(Rectangle())
-                                .onTapGesture {
-                                    selectedItem = item
-                                    editedNotes = item.userNotes ?? ""
-                                }
-                            }
-                        }
-                        .onDelete { indexes in
-                            for index in indexes {
-                                deleteItem(paginatedItems[index])
-//                                print("index: \(index)")
-//                                print("new index: \(items.count) - \(index) - 1")
-//                                deleteItem(items[items.count - index - 1])
-//                                updateTrigger.toggle()
-                            }
-                        }
-                    }
-                    .scrollContentBackground(.hidden)
-                    .background(Color.uncBlue)
-                    .padding(.top, -20)
-                    
-                    HStack(spacing: 30) {
-                        Button {
-                            currentPage = 1
-                        } label: {
-                            Image(systemName: "chevron.left.2")
-                        }
-                        Button {
-                            if currentPage > 1 {
-                                currentPage -= 1
-                            }
-                        } label: {
-                            Image(systemName: "arrow.left")
-                        }
-                        Text("\(currentPage) of \((filteredItems.count + itemsPerPage - 1) / itemsPerPage)")
-                        Button {
-                            if ((currentPage * itemsPerPage) < items.count) {
-                                currentPage += 1
-                            }
-                        } label: {
-                            Image(systemName: "arrow.right")
-                        }
-                        Button {
-                            currentPage = (filteredItems.count + itemsPerPage - 1) / itemsPerPage
-                        } label: {
-                            Image(systemName: "chevron.right.2")
-                        }
-                    }.foregroundStyle(Color.white)
-                        .padding(.bottom, 30)
-                        .background {
-                            Rectangle()
-                                .frame(width: 500, height: 100)
-                                .foregroundStyle(Color.uncBlue)
-                        }
-                } else {
-                    HStack {
-                        Button {
-                            presentationMode.wrappedValue.dismiss()
-                            selectedTab = "1"
-                        }label: {
-                            Image(systemName: "house.fill")
-                                .resizable()
-                                .frame(width: 25, height: 25)
-                                .foregroundStyle(Color.darkerblue)
-                                .padding(.leading, 15)
-                        }
-                        Spacer()
-                        Text("Favorites")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .italic()
-                            .foregroundStyle(.darkerblue)
-                        Spacer()
-                        Button {
-                            instructionsClicked = true
-                        }label: {
-                            Image(systemName: "info.circle")
-                                .resizable()
-                                .frame(width: 25, height: 25)
-                                .foregroundStyle(Color.darkerblue)
-                                .padding(.trailing, 15)
-                        }
-                    }
+                        TextField("Search by restaurant name or city", text: $searchTerm)
+                            .font(.subheadline)
+                            .padding(12)
+                            .background(.white)
+                            .padding()
+                            .shadow(radius: 10)
                             .background {
                                 Rectangle()
-                                    .frame(width: 500, height: 72)
-                                    .foregroundStyle(.white)
+                                    .frame(width: 500, height: 86)
+                                    .foregroundStyle(Color.uncBlue)
+                            }.overlay(alignment: .trailing) {
+                                Button {
+                                    searchTerm = ""
+                                }label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                        .foregroundStyle(.gray)
+                                        .padding(.trailing, 25)
+                                }.onTapGesture {
+                                    //swipe down keyboard
+                                }
                             }
-
+                        List() {
+                            ForEach(paginatedItems) { item in
+                                if (item.name.lowercased().contains(searchTerm.lowercased()) || item.city.lowercased().contains(searchTerm.lowercased()) || searchTerm == "") {
+                                    HStack {
+                                        VStack(alignment: .leading) {
+                                            Text(item.name)
+                                            Text("\(item.city), \(item.state ?? "")")
+                                                .font(.footnote)
+                                        }
+                                        Spacer()
+                                        ImageView(urlString: item.imageUrl)
+                                            .frame(width: 50, height: 36)
+                                            .cornerRadius(5)
+                                            .padding(.trailing, 10)
+                                    }
+                                    .contentShape(Rectangle())
+                                    .onTapGesture {
+                                        selectedItem = item
+                                        editedNotes = item.userNotes ?? ""
+                                    }
+                                }
+                            }
+                            .onDelete { indexes in
+                                for index in indexes {
+                                    deleteItem(paginatedItems[index])
+                                    //                                print("index: \(index)")
+                                    //                                print("new index: \(items.count) - \(index) - 1")
+                                    //                                deleteItem(items[items.count - index - 1])
+                                    //                                updateTrigger.toggle()
+                                }
+                            }
+                        }
+                        .scrollContentBackground(.hidden)
+                        .background(LinearGradient(gradient: Gradient(colors:[Color.uncBlue, Color.darkerblue]), startPoint: UnitPoint(x: 0.5, y: 0.5), endPoint: UnitPoint(x: 0.5, y: getYGradient(for: geometry.size))))
+                        .padding(.top, -20)
+                        
+                        HStack(spacing: 30) {
+                            Button {
+                                currentPage = 1
+                            } label: {
+                                Image(systemName: "chevron.left.2")
+                            }
+                            Button {
+                                if currentPage > 1 {
+                                    currentPage -= 1
+                                }
+                            } label: {
+                                Image(systemName: "arrow.left")
+                            }
+                            Text("\(currentPage) of \((filteredItems.count + itemsPerPage - 1) / itemsPerPage)")
+                            Button {
+                                if ((currentPage * itemsPerPage) < items.count) {
+                                    currentPage += 1
+                                }
+                            } label: {
+                                Image(systemName: "arrow.right")
+                            }
+                            Button {
+                                currentPage = (filteredItems.count + itemsPerPage - 1) / itemsPerPage
+                            } label: {
+                                Image(systemName: "chevron.right.2")
+                            }
+                        }.foregroundStyle(Color.white)
+                            .padding(.bottom, 30)
+                        //                        .background {
+                        //                            Rectangle()
+                        //                                .frame(width: 500, height: 100)
+                        //                                .foregroundStyle((LinearGradient(gradient: Gradient(colors:[Color.uncBlue, Color.darkerblue]), startPoint: UnitPoint(x: 0.5, y: -6.0), endPoint: .bottom)))
+                        //                        }
+                    } else {
+                        HStack {
+                            Button {
+                                presentationMode.wrappedValue.dismiss()
+                                selectedTab = "1"
+                            }label: {
+                                Image(systemName: "house.fill")
+                                    .resizable()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.darkerblue)
+                                    .padding(.leading, 15)
+                            }
+                            Spacer()
+                            Text("Favorites")
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
+                            //                            .italic()
+                                .foregroundStyle(.darkerblue)
+                            Spacer()
+                            Button {
+                                instructionsClicked = true
+                            }label: {
+                                Image(systemName: "info.circle")
+                                    .resizable()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(Color.darkerblue)
+                                    .padding(.trailing, 15)
+                            }
+                        }
+                        .background {
+                            Rectangle()
+                                .frame(width: 500, height: 122)
+                                .foregroundStyle(.white)
+                                .padding(.bottom, 50)
+                        }
+                        
                         Spacer()
                         Text("You don't have any favorites yet :(")
                             .foregroundColor(.white)
                             .font(.title2)
                             .fontWeight(.bold)
                             .padding(.trailing, 10)
-//                            .shadow(color:.gray, radius: 5)
-
+                        //                            .shadow(color:.gray, radius: 5)
+                        
                         Spacer()
                     }
-
-            }.overlay {
-                if (instructionsClicked) {
-                    Color.black.opacity(0.3).ignoresSafeArea()
-                    InstructionsView(selectedTab: $selectedTab)
-                        .padding(6)
-                        .multilineTextAlignment(.leading)
-                        .frame(width: 350, height: 500, alignment: .topLeading)
-                        .background {
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.black, lineWidth: 1)
-                                .fill(Color.white)
-                        }.overlay(alignment: .topTrailing) {
-                            Button {
-                                instructionsClicked = false
-                            }label: {
-                                Image(systemName: "xmark.circle")
-                                    .resizable()
-                                    .frame(width: 25, height: 25)
-                                    .padding(.top, 20)
-                                    .padding(.trailing, 10)
-                            }.padding(.trailing, 15)
-                                .padding(.top, 10)
-                        }
+                    
+                }.overlay {
+                    if (instructionsClicked) {
+                        Color.black.opacity(0.3).ignoresSafeArea()
+                        InstructionsView(selectedTab: $selectedTab)
+                            .padding(6)
+                            .multilineTextAlignment(.leading)
+                            .frame(width: 350, height: 435, alignment: .topLeading)
+                            .background {
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.black, lineWidth: 1)
+                                    .fill(Color.white)
+                            }.overlay(alignment: .topTrailing) {
+                                Button {
+                                    instructionsClicked = false
+                                }label: {
+                                    Image(systemName: "xmark.circle")
+                                        .resizable()
+                                        .foregroundStyle(.black)
+                                        .frame(width: 25, height: 25)
+                                        .padding(.top, 10)
+                                        .padding(.trailing, 10)
+                                }.padding(.trailing, 15)
+                                    .padding(.top, 10)
+                            }
+                    }
                 }
             }
         }
@@ -355,9 +360,8 @@ struct FavoritesView: View {
                         Text(String(format: "%.1f", selectedItem.rating))
                             .fontWeight(.semibold)
                         Text("(\(selectedItem.reviewCount)) on Yelp")
-                            .foregroundColor(.secondary)
                             .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.black)
                         Text("*")
                         Text("\(selectedItem.price)")
                     }
@@ -430,6 +434,7 @@ struct FavoritesView: View {
                     Spacer()
                 }
                 .padding(.horizontal, 20)
+                .foregroundStyle(.black)
                 
                 if openEditor {
                     Color.black.opacity(0.3).edgesIgnoringSafeArea(.all)
@@ -446,6 +451,8 @@ struct FavoritesView: View {
                             .background {
                                 RoundedRectangle(cornerRadius: 20)
                                     .stroke(Color.black, lineWidth: 1)
+                                    .foregroundStyle(.white)
+
                             }.overlay {
                                 if (editedNotes.isEmpty) {
                                     Text("Click to add notes...")
@@ -488,6 +495,10 @@ struct FavoritesView: View {
                 addItem()
             }
         }
+    }
+    
+    func getYGradient(for size: CGSize) -> CGFloat {
+        return size.width > 400 ? 1.09 : 1.1
     }
     
     func addItem() {

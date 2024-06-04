@@ -10,13 +10,13 @@ import SwiftUI
 struct InstructionsView: View {
     @Binding var selectedTab: String
     var body: some View {
-        VStack() {
+        VStack {
             HStack {
                 Spacer()
                 Text("Instructions")
                     .font(.title)
                     .fontWeight(.bold)
-                    .padding(.top, 20)
+                    .padding(.top, 10)
                 Spacer()
             }
                 VStack {
@@ -28,7 +28,7 @@ struct InstructionsView: View {
                         Image(systemName: selectedTab == "1" ? "menucard.fill" : "menucard")
 
                     }
-                    .padding(.top, 30)
+                    .padding(.top, 20)
                     .padding(.leading, 10)
                     Text("Select your preferred filters and search for restaurants!")
                         .multilineTextAlignment(.center)
@@ -67,6 +67,7 @@ struct InstructionsView: View {
 
 
         }.padding(.horizontal, 30)
+            .foregroundStyle(.black)
     }
 }
 

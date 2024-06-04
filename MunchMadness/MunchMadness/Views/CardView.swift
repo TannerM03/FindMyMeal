@@ -20,9 +20,10 @@ struct CardView: View {
         VStack(alignment: .leading){
             VStack() {
                     Text(restaurant.name)
+                    .foregroundStyle(.black)
                     .font(.title2)
                         .multilineTextAlignment(.center)
-                        .italic()
+//                        .italic()
                         .frame(width: 265)
                         HStack {
                             Image(systemName: "star.fill")
@@ -30,9 +31,10 @@ struct CardView: View {
                             Text(String(format: "%.1f", restaurant.rating))
                                 .fontWeight(.semibold)
                             Text("(\(restaurant.reviewCount)) on Yelp")
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.black)
                                 .font(.subheadline)
-                        }
+                        }.foregroundStyle(.black)
+
                     
                 
                 HStack {
@@ -69,13 +71,9 @@ struct CardView: View {
                                                 .foregroundStyle(.black)
                                         )
                                 )
-
-                            
                         }
-//                        Text("\(restaurant.address1 ?? ""), \(restaurant.city ?? "")")
-//                        
-//                            .font(.subheadline)
-//                            .foregroundColor(.secondary)
+                        .foregroundStyle(.black)
+
                         Button {
                             if let yelpUrl = URL(string: restaurant.url) {
                                 UIApplication.shared.open(yelpUrl)
@@ -122,7 +120,8 @@ struct CardView: View {
                     Text(String(format: "%.1f mi", restaurant.distance / 1600))
 
                 }.font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.black)
+
                 
 
             }

@@ -39,7 +39,8 @@ struct SwiperView: View {
     
     var body: some View {
         ZStack {
-            Color.uncBlue
+            LinearGradient(gradient: Gradient(colors:[Color.uncBlue, Color.darkerblue]), startPoint: UnitPoint(x: 0.5, y: 0.5), endPoint: .bottom)
+//            Color.uncBlue
             VStack {
                 HStack {
                     Button {
@@ -58,7 +59,7 @@ struct SwiperView: View {
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(.darkerblue)
-                        .italic()
+//                        .italic()
                     Spacer()
                     Button {
                         instructionsClicked = true
@@ -72,8 +73,9 @@ struct SwiperView: View {
                 }
                     .background(
                 Rectangle()
-                    .frame(width: 400, height: 72)
+                    .frame(width: 600, height: 122)
                     .foregroundColor(.white)
+                    .padding(.bottom, 50)
                     )
                 Spacer()
                 if (firstSearch) {
@@ -84,6 +86,7 @@ struct SwiperView: View {
                             .font(.title2)
                             .foregroundStyle(.white)
                             .fontWeight(.bold)
+                            .frame(width: 390)
                         Spacer()
                     }
                 }
@@ -172,7 +175,7 @@ struct SwiperView: View {
                         if restaurants.count != 1 {
                             Text("VS")
                                 .font(.title)
-                                .italic()
+//                                .italic()
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
                                 .shadow(color:.gray, radius: 5)
@@ -209,7 +212,7 @@ struct SwiperView: View {
                     InstructionsView(selectedTab: $selectedTab)
                         .padding(6)
                         .multilineTextAlignment(.leading)
-                        .frame(width: 350, height: 500, alignment: .topLeading)
+                        .frame(width: 350, height: 435, alignment: .topLeading)
                         .background {
                             RoundedRectangle(cornerRadius: 20)
                                 .stroke(Color.black, lineWidth: 1)
@@ -220,8 +223,9 @@ struct SwiperView: View {
                             }label: {
                                 Image(systemName: "xmark.circle")
                                     .resizable()
+                                    .foregroundStyle(.black)
                                     .frame(width: 25, height: 25)
-                                    .padding(.top, 20)
+                                    .padding(.top, 10)
                                     .padding(.trailing, 10)
                             }.padding(.trailing, 15)
                                 .padding(.top, 10)
