@@ -22,17 +22,24 @@ struct CardView: View {
                     Text(restaurant.name)
                     .foregroundStyle(.black)
                     .font(.title2)
+                    .fontWeight(.medium)
                         .multilineTextAlignment(.center)
 //                        .italic()
                         .frame(width: 265)
+                        .padding(.bottom, -2)
                         HStack {
-                            Image(systemName: "star.fill")
+                            Image(getStarImage(rating: restaurant.rating))
                                 .foregroundStyle(.yellow)
                             Text(String(format: "%.1f", restaurant.rating))
-                                .fontWeight(.semibold)
-                            Text("(\(restaurant.reviewCount)) on Yelp")
+                                .fontWeight(.medium)
+                            Text("(\(restaurant.reviewCount)) on ")
                                 .foregroundStyle(.black)
                                 .font(.subheadline)
+                            Image("yelp_logo")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 40, height: 20)
+                                .padding(.leading, -5)
                         }.foregroundStyle(.black)
 
                     
@@ -98,7 +105,10 @@ struct CardView: View {
                                         .foregroundStyle(.white)
                                         
                                         .overlay(
-                                            Image(systemName: "chevron.forward.2")
+                                            Image("yelp_burst")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 18, height: 18)
                                                 .foregroundStyle(Color.yelpRed)
                                                 .fontWeight(.semibold)
                                                 .font(.footnote)
@@ -144,6 +154,36 @@ struct CardView: View {
 //            .padding()
 //            ShareLink(item: (URL(string: restaurant.url) ?? yelpHomePage)!)
         }
+    }
+}
+
+func getStarImage(rating: Double) -> String {
+    let ratingInt = (rating * 2).rounded() / 2
+    switch ratingInt {
+    case 0:
+        return "yelp0Star"
+    case 0.5:
+        return "yelp0.5Star"
+    case 1:
+        return "yelp1Star"
+    case 1.5:
+        return "yelp1.5Star"
+    case 2:
+        return "yelp2Star"
+    case 2.5:
+        return "yelp2.5Star"
+    case 3:
+        return "yelp3Star"
+    case 3.5:
+        return "yelp3.5Star"
+    case 4:
+        return "yelp4Star"
+    case 4.5:
+        return "yelp4.5Star"
+    case 5:
+        return "yelp5Star"
+    default:
+        return ""
     }
 }
 

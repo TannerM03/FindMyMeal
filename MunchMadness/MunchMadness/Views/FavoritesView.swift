@@ -3,7 +3,7 @@ import SwiftData
 
 struct FavoritesView: View {
     @Environment(\.modelContext) private var context
-    @Query private var items: [DataItem]
+    @Query private var items: [DataItem] = []
     
     @Binding var restaurant: RestaurantViewModel?
     @Binding var selectedTab: String
@@ -322,8 +322,11 @@ struct FavoritesView: View {
                                         .foregroundStyle(.white)
                                     
                                         .overlay(
-                                            Image(systemName: "chevron.forward.2")
-                                                .foregroundStyle(Color.yelpRed)
+                                            Image("yelp_burst")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 18, height: 18)
+//                                                .foregroundStyle(Color.yelpRed)
                                                 .fontWeight(.semibold)
                                                 .font(.footnote)
                                                 .padding(.trailing, 85)
@@ -355,13 +358,18 @@ struct FavoritesView: View {
                         .padding(.bottom, -3)
                     
                     HStack {
-                        Image(systemName: "star.fill")
+                        Image(getStarImage(rating: selectedItem.rating))
                             .foregroundStyle(.yellow)
                         Text(String(format: "%.1f", selectedItem.rating))
-                            .fontWeight(.semibold)
-                        Text("(\(selectedItem.reviewCount)) on Yelp")
+                            .fontWeight(.medium)
+                        Text("(\(selectedItem.reviewCount)) on ")
                             .font(.subheadline)
                             .foregroundStyle(.black)
+                        Image("yelp_logo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 40, height: 20)
+                            .padding(.leading, -5)
                         Text("*")
                         Text("\(selectedItem.price)")
                     }
@@ -409,7 +417,8 @@ struct FavoritesView: View {
                             }
                     }
                     ScrollView {
-                        Text(selectedItem.userNotes ?? "")
+                        Text(selectedItem.userNotes ?? "No notes yet...")
+                            .foregroundStyle(selectedItem.userNotes != nil ? Color.black : Color.gray)
                             .multilineTextAlignment(.leading)
                             .padding(10)
                             .frame(width: 300, alignment: .topLeading)
@@ -418,17 +427,6 @@ struct FavoritesView: View {
                             RoundedRectangle(cornerRadius: 20)
                                 .stroke(Color.black, lineWidth: 1)
                                 .fill(Color.white)
-                        }.overlay {
-                            if (editedNotes.isEmpty) {
-                                Text("No notes yet...")
-                                    .frame(width: 300)
-                                    .font(.headline)
-                                    .foregroundStyle(Color.gray)
-                                    .fontWeight(.medium)
-                                    .padding(.trailing, 160)
-                                    .padding(.bottom, 70)
-                                    .allowsHitTesting(false)
-                            }
                         }
                     
                     Spacer()
@@ -494,6 +492,36 @@ struct FavoritesView: View {
             if (didSubmit) {
                 addItem()
             }
+        }
+    }
+    
+    func getStarImage(rating: Double) -> String {
+        let ratingInt = (rating * 2).rounded() / 2
+        switch ratingInt {
+        case 0:
+            return "yelp0Star"
+        case 0.5:
+            return "yelp0.5Star"
+        case 1:
+            return "yelp1Star"
+        case 1.5:
+            return "yelp1.5Star"
+        case 2:
+            return "yelp2Star"
+        case 2.5:
+            return "yelp2.5Star"
+        case 3:
+            return "yelp3Star"
+        case 3.5:
+            return "yelp3.5Star"
+        case 4:
+            return "yelp4Star"
+        case 4.5:
+            return "yelp4.5Star"
+        case 5:
+            return "yelp5Star"
+        default:
+            return ""
         }
     }
     

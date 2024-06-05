@@ -14,7 +14,7 @@ struct FilterView: View {
     @State private var limit = 10
     @State private var radius = 0
     
-    @State private var prices: [Int] = [1]
+    @State private var prices: [Int] = [2,3]
     
     @State var latitude: CLLocationDegrees
     @State var longitude: CLLocationDegrees
@@ -190,46 +190,47 @@ struct FilterView: View {
         }.overlay {
             if showTitle {
                 
-                
-                HStack {
-                    Button {
-                        presentationMode.wrappedValue.dismiss()
-                        selectedTab = "1"
-                    }label: {
-                        Image(systemName: "house.fill")
-                            .resizable()
-                            .frame(width: 25, height: 25)
-                            .foregroundStyle(Color.darkerblue)
-                            .padding(.leading, 15)
+                VStack {
+                    HStack {
+                        Button {
+                            presentationMode.wrappedValue.dismiss()
+                            selectedTab = "1"
+                        }label: {
+                            Image(systemName: "house.fill")
+                                .resizable()
+                                .frame(width: 25, height: 25)
+                                .foregroundStyle(Color.darkerblue)
+                                .padding(.leading, 15)
+                        }
+                        Spacer()
+                        Text("Filters")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .foregroundColor(.darkerblue)
+                        Spacer()
+                        //                        .italic()
+                        Button {
+                            instructionsClicked = true
+                        }label: {
+                            Image(systemName: "info.circle")
+                                .resizable()
+                                .frame(width: 25, height: 25)
+                                .foregroundStyle(Color.darkerblue)
+                                .padding(.trailing, 15)
+                        }
                     }
-                    Spacer()
-                    Text("Filters")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .foregroundColor(.darkerblue)
-                    //                        .italic()
-                    Spacer()
-                    Button {
-                        instructionsClicked = true
-                    }label: {
-                        Image(systemName: "info.circle")
-                            .resizable()
-                            .frame(width: 25, height: 25)
-                            .foregroundStyle(Color.darkerblue)
-                            .padding(.trailing, 15)
-                    }
-                }
-                .background {
-                    Rectangle()
-                        .frame(width: 500, height: 122)
-                        .foregroundColor(.white)
-                        .padding(.bottom, 50)
-                    if instructionsClicked {
-                        Color.black.opacity(0.3)
+                    .background {
+                        Rectangle()
+                            .frame(width: 500, height: 122)
+                            .foregroundColor(.white)
                             .padding(.bottom, 50)
+                        if instructionsClicked {
+                            Color.black.opacity(0.3)
+                                .padding(.bottom, 50)
+                        }
                     }
-                }.padding(.bottom, getHeaderSize(for: geometry.size))
-                //669 for iphone plus
+                    Spacer()
+                }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
             }
         }.preferredColorScheme(.light)
@@ -247,15 +248,41 @@ struct FilterView: View {
 //}
 
 func getSpacing(for size: CGSize) -> CGFloat {
-    return size.width > 400 ? 35 : 25
+//    return size.width > 400 ? 35 : 25
+    if size.height > 711 {
+        return 35
+    } else if size.height > 700 {
+        return 25
+    } else {
+        return 20
+    }
 }
 
-func getHeaderSize(for size: CGSize) -> CGFloat {
-    return size.width > 400 ? 756 : 669
-}
+/*
+ 14pro, 15pro, 15: 710 --> -45
+ 15proMax, 15plus, 14proMax: 790 --> -45
+ 14plus, 13proMax, 12proMax: 796 --> -48
+ 12, 12pro, 13, 13pro, 14: 714 --> -48
+ 13mini, 12mini: 679 --> -48
+ SE: 578 --> -48
+ XR, 11: 765 --> -48
+ 11pro, X, XS: 685--> -48
+ */
 
 func getInstructionsOffset(for size: CGSize) -> CGFloat {
-    return size.width > 400 ? -48 : -45
+    if size.height > 930 {
+        return -46
+    } else if size.height > 920 {
+        return -48
+    } else if size.height > 711 {
+        return -48
+    } else if size.height > 709 {
+        return -45
+    } else if size.height > 678 {
+        return -48
+    } else {
+        return -48
+    }
 }
 
 struct PricesFilter: View {
@@ -475,6 +502,7 @@ struct SubmitBtn: View {
     @Binding var limit: Int
     @Binding var locationPressed: Bool
     @State private var showAlert = false
+    @State private var pricesAlert = false
     
     var body: some View {
 
@@ -483,7 +511,11 @@ struct SubmitBtn: View {
         Button(action: {
             if !locationPressed {
                 showAlert = true
-            } else {
+            } else if prices == [] {
+                pricesAlert = true
+            }
+            else {
+                pricesAlert = false
                 firstSearch = false
                 searching = true
                 topIndex = 0
@@ -535,6 +567,8 @@ struct SubmitBtn: View {
                 )
 //                .padding(.bottom, 20)
         }).alert("Select a location", isPresented: $showAlert) {
+            Button("OK", role: .cancel) { }
+        }.alert("Select your price range", isPresented: $pricesAlert) {
             Button("OK", role: .cancel) { }
         }
 //        .navigationDestination(isPresented: $isSwiperViewActive) {
