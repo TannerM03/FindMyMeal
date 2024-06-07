@@ -14,7 +14,7 @@ struct FilterView: View {
     @State private var limit = 10
     @State private var radius = 0
     
-    @State private var prices: [Int] = [2,3]
+    @State private var prices: [Int] = []
     
     @State var latitude: CLLocationDegrees
     @State var longitude: CLLocationDegrees

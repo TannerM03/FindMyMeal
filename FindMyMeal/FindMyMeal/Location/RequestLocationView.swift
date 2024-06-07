@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct RequestLocationAccessView: View {
     @ObservedObject var locationManager: LocationManager
+
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
@@ -25,7 +27,13 @@ struct RequestLocationAccessView: View {
                     .frame(width: 300)
                     .padding(.bottom, 10)
                 Button {
-                    locationManager.requestLocationAccess()
+                    if locationManager.authStatus == CLAuthorizationStatus.denied {
+                        if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                            UIApplication.shared.open(appSettings)
+                        }
+                    } else {
+                        locationManager.requestLocationAccess()
+                    }
                 } label: {
                     Text("Allow access")
                 }

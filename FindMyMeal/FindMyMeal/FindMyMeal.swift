@@ -1,6 +1,6 @@
 //
-//  MunchMadnessApp.swift
-//  MunchMadness
+//  FindMyMeal.swift
+//  FindMyMeal
 //
 //  Created by Tanner Macpherson on 3/7/24.
 //
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @main
- struct MunchMadnessApp: App {
+ struct FindMyMeal: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

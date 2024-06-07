@@ -35,11 +35,12 @@ struct CardView: View {
                             Text("(\(restaurant.reviewCount)) on ")
                                 .foregroundStyle(.black)
                                 .font(.subheadline)
+                                .padding(.leading, -2)
                             Image("yelp_logo")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 40, height: 20)
-                                .padding(.leading, -5)
+                                .padding(.leading, -6)
                         }.foregroundStyle(.black)
 
                     

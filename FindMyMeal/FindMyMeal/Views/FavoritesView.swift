@@ -365,11 +365,12 @@ struct FavoritesView: View {
                         Text("(\(selectedItem.reviewCount)) on ")
                             .font(.subheadline)
                             .foregroundStyle(.black)
+                            .padding(.leading, -3)
                         Image("yelp_logo")
                             .resizable()
                             .scaledToFit()
                             .frame(width: 40, height: 20)
-                            .padding(.leading, -5)
+                            .padding(.leading, -6)
                         Text("*")
                         Text("\(selectedItem.price)")
                     }

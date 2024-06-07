@@ -12,6 +12,7 @@ class LocationManager: NSObject, ObservableObject {
     private let manager = CLLocationManager()
     @Published var userLocation: CLLocation?
     @Published var hasLocationAccess: Bool = false
+    @Published var authStatus: CLAuthorizationStatus?
     
     override init() {
         super.init()
@@ -54,6 +55,7 @@ extension LocationManager: CLLocationManagerDelegate {
             hasLocationAccess = false
             break
         }
+        authStatus = status
     }
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {return}
