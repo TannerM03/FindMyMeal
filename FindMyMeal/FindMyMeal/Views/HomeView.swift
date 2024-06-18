@@ -68,9 +68,12 @@ struct BeginButton: View {
     @State var searching = false
     @State var didSubmit = false
     @Binding var firstSearch: Bool
+    @State var animationCount = 0
+    
+
     var body: some View {
 //        NavigationStack {
-        NavigationLink(destination: TabsView(selectedTab: $selectedTab, vm: vm, restaurants: $restaurants, isNewSearch: $isNewSearch, topIndex: $topIndex, bottomIndex: $bottomIndex, searching: $searching, didSubmit: $didSubmit, firstSearch: $firstSearch).navigationBarBackButtonHidden(true)) {
+        NavigationLink(destination: TabsView(selectedTab: $selectedTab, vm: vm, restaurants: $restaurants, isNewSearch: $isNewSearch, topIndex: $topIndex, bottomIndex: $bottomIndex, searching: $searching, didSubmit: $didSubmit, firstSearch: $firstSearch, animationCount: $animationCount).navigationBarBackButtonHidden(true)) {
                 Text("BEGIN")
                     .font(.title2)
                     .padding()

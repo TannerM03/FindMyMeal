@@ -53,6 +53,7 @@ struct FilterView: View {
     
     @Binding var firstSearch: Bool
     @State var locationPressed = false
+    @Binding var animationCount: Int
             
     var body: some View {
         GeometryReader { geometry in
@@ -84,16 +85,16 @@ struct FilterView: View {
                             
                             //get distance parameter
                             HStack {
-                                Text("Preferred max distance?")
+                                Text("Maximum distance?")
                                     .foregroundColor(.white)
                                     .font(.title2)
                                     .fontWeight(.bold)
-                                //                            .padding(.trailing, 45)
                                     .shadow(color:.gray, radius: 5)
+                                Spacer()
                                 
                                 DistancePicker(distance: $distance)
                                 
-                            }
+                            }.frame(width: 328)
                             
                             //get price range
                             Text("Price Range:")
@@ -107,12 +108,11 @@ struct FilterView: View {
                             PricesFilter(prices: $prices)
                             
                             HStack {
-                                Text("Max number of options?")
+                                Text("Number of options?")
                                     .font(.title2)
                                     .fontWeight(.bold)
                                     .foregroundColor(.white)
                                     .shadow(color:.gray, radius: 5)
-                                    .padding(.trailing, 10)
                                 Spacer()
                                 CountPicker(count: $limit)
                             }.frame(width: 328)
@@ -147,7 +147,7 @@ struct FilterView: View {
                             
                             
                             //submit button that takes you to SwiperView()
-                            SubmitBtn(distance: $distance, userMood: $userMood, prices: $prices, usingPersonalLocation: $usingPersonalLocation, radius: $radius, isSwiperViewActive: $isSwiperViewActive, isOpen: $isOpen, latitude: $latitude, longitude: $longitude, selectedLongitude: $selectedLongitude, selectedLatitude: $selectedLatitude, isNewSearch: $isNewSearch, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant, restaurants: $restaurants, topIndex: $topIndex, bottomIndex: $bottomIndex, searching: $searching, firstSearch: $firstSearch, limit: $limit, locationPressed: $locationPressed)
+                            SubmitBtn(distance: $distance, userMood: $userMood, prices: $prices, usingPersonalLocation: $usingPersonalLocation, radius: $radius, isSwiperViewActive: $isSwiperViewActive, isOpen: $isOpen, latitude: $latitude, longitude: $longitude, selectedLongitude: $selectedLongitude, selectedLatitude: $selectedLatitude, isNewSearch: $isNewSearch, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant, restaurants: $restaurants, topIndex: $topIndex, bottomIndex: $bottomIndex, searching: $searching, firstSearch: $firstSearch, limit: $limit, locationPressed: $locationPressed, animationCount: $animationCount)
                                 .padding(.bottom, 35)
                             
                         }
@@ -395,6 +395,7 @@ struct SelectLocationBtn: View {
             useMyLocationPressed = false
             mapView.toggle()
             showTitle = false
+            locationPressed = false
         } label: {
             VStack {
                 Text("SELECT")
@@ -503,13 +504,14 @@ struct SubmitBtn: View {
     @Binding var locationPressed: Bool
     @State private var showAlert = false
     @State private var pricesAlert = false
+    @Binding var animationCount: Int
     
     var body: some View {
 
         @State var profile = false
         
         Button(action: {
-            if !locationPressed {
+            if (!locationPressed) {
                 showAlert = true
             } else if prices == [] {
                 pricesAlert = true
@@ -525,6 +527,7 @@ struct SubmitBtn: View {
                 radius = distance * 1600 - distance * 50
                 vm.term = userMood
                 vm.prices = prices
+                animationCount = 0
                 if usingPersonalLocation == true {
                     print("restaurants before getPlaces: \(restaurants)")
                     Task {

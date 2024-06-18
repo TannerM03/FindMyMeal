@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ConfettiSwiftUI
 
 
 struct SwiperView: View {
@@ -34,8 +35,12 @@ struct SwiperView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var instructionsClicked = false
     @Binding var firstSearch: Bool
+    @State private var confettiCounter = 0
+    @State private var finalCardOffset = CGSize(width: 0, height: 0)
+    @State private var shimmerOffset: CGFloat = -UIScreen.main.bounds.width
+    @Binding var animationCount: Int
 
-    
+
     
     var body: some View {
         ZStack {
@@ -115,43 +120,56 @@ struct SwiperView: View {
                 }
                 else {
                     if restaurants.count == 1 {
-                        CardView(restaurant: restaurants[0])
-                            .rotationEffect(.degrees(rotationAngle))
-                            .animation(.easeInOut(duration: 1.0))
-                            .onAppear {
-                                // Start the animation when the view appears
-                                withAnimation {
-                                    rotationAngle += 720 // Rotate one full circle
+                        VStack {
+                            Spacer()
+                            //text that says winner
+                            CardView(restaurant: restaurants[0])
+                                .rotationEffect(.degrees(rotationAngle))
+                                .offset(finalCardOffset)
+                                .onAppear {
+                                        // Animate the card sliding to the center and rotating
+                                    if (animationCount < 1) {
+                                        withAnimation(.easeInOut(duration: 0.5)) {
+                                            finalCardOffset = .zero
+                                            rotationAngle += 720 // Rotate two full circles
+                                        }
+                                    }
+
                                 }
-                            }
-                        Button {
-                            savedRestaurant = restaurants[0]
-                            selectedTab = "3"
-                            didSubmit = true
-                            print("clicked favorites button")
-                        }label: {
-                            Text("Click to add to favorites")
-                                .padding()
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .fill(.white)
-                                        .shadow(radius: 2)
-                                )
+                            Button {
+                                savedRestaurant = restaurants[0]
+                                selectedTab = "3"
+                                didSubmit = true
+                                print("clicked favorites button")
+                            }label: {
+                                Text("Click to add to favorites")
+                                    .padding()
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .fill(.white)
+                                            .shadow(radius: 2)
+                                    )
+                            }.confettiCannon(counter: $confettiCounter, num: 200,  rainHeight: 900, radius: 370)
+
+                            .padding(.top, 40)
+                            
+                            Spacer()
                         }
-                        .padding(.top, 40)
-                        
-                        Spacer()
+                        .onAppear {
+                            confettiCounter = confettiCounter + 1
+                        }
                     }
                     
                     else {
                         // current restaurant
-                        Text("Restaurants Remaining: \(restaurants.count)")
+                        Text("Swipe to Eliminate!")
                             .font(.title2)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
                             .shadow(color:.gray, radius: 5)
+                        
                         
                         CardView(restaurant: restaurants[topIndex])
                             .padding()
@@ -171,7 +189,9 @@ struct SwiperView: View {
                                         SwipeCard(width: offset.width)
                                     }
                                 
-                            )
+                            ).onAppear {
+                                shimmerOffset = -UIScreen.main.bounds.width
+                            }
                         if restaurants.count != 1 {
                             Text("VS")
                                 .font(.title)
@@ -202,6 +222,12 @@ struct SwiperView: View {
                                         }
                                     
                                 )
+                            Text("Restaurants Remaining: \(restaurants.count)")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding(.top, 8)
+//                                .shadow(color:.gray, radius: 5)
                             Spacer()
                         }
                     }
@@ -240,6 +266,9 @@ struct SwiperView: View {
             }
         }.onAppear{
             print("swiper count: \(restaurants.count)")
+            if restaurants.count == 1 {
+                animationCount = animationCount + 1
+            }
         }
 
     }
@@ -249,6 +278,7 @@ struct SwiperView: View {
     }
     
     private func SwipeCard(width: CGFloat) {
+        finalCardOffset = CGSize(width: 0, height: 185)
         isNewSearch = false
         withAnimation(.easeInOut(duration: 0.2)) {
             switch width {
@@ -268,6 +298,7 @@ struct SwiperView: View {
         
     }
     private func SwipeSecondCard(width: CGFloat) {
+        finalCardOffset = CGSize(width: 0, height: -98)
         isNewSearch = false
         withAnimation(.easeInOut(duration: 0.2)) {
             switch width {
