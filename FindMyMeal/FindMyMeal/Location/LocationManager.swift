@@ -37,19 +37,19 @@ extension LocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
         case .notDetermined:
-            print("DEBUG: not determined")
+//            print("DEBUG: not determined")
             hasLocationAccess = false
         case .restricted:
-            print("DEBUG: restricted")
+//            print("DEBUG: restricted")
             hasLocationAccess = false
         case .denied:
-            print("DEBUG: denied")
+//            print("DEBUG: denied")
             hasLocationAccess = false
         case .authorizedAlways:
-            print("DEBUG: Auth always")
+//            print("DEBUG: Auth always")
             hasLocationAccess = true
         case .authorizedWhenInUse:
-            print("DEBUG: Auth when in use")
+//            print("DEBUG: Auth when in use")
             hasLocationAccess = true
         @unknown default:
             hasLocationAccess = false

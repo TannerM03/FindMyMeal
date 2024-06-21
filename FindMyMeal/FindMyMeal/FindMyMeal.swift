@@ -13,6 +13,7 @@ import SwiftData
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(\.sizeCategory, .large)
         }
         .modelContainer(for: DataItem.self)
     }

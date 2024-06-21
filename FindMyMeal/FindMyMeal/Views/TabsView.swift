@@ -48,7 +48,3 @@ struct TabsView: View {
         }.tint(.darkerblue)
     }
 }
-
-//#Preview {
-//    TabsView(locationManager: LocationManager())
-//}

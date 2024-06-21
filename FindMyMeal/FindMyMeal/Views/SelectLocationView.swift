@@ -59,6 +59,7 @@ struct SelectLocationView: View {
                         }.foregroundStyle(Color.darkerblue)
                         .padding(.leading, 20)
                         TextField("Search for city or address", text: $searchText)
+                            .submitLabel(.search)
                             .foregroundStyle(Color.black)
                             .font(.subheadline)
                             .padding(12)
@@ -72,7 +73,6 @@ struct SelectLocationView: View {
                             .overlay(alignment: .trailing) {
                                 Button {
                                     searched = true
-                                    print("searched")
                                     
                                     Task { await searchPlaces()
                                         if let firstItem = results.first {
@@ -86,8 +86,6 @@ struct SelectLocationView: View {
                                             cameraPosition = .region(resultRegion)
                                             selectedLatitude = firstItem.placemark.coordinate.latitude
                                             selectedLongitude = firstItem.placemark.coordinate.longitude
-                                            print("Latitude: \(firstItem.placemark.coordinate.latitude)")
-                                            print("Longitude: \(firstItem.placemark.coordinate.longitude)")
                                             
                                         }
                                     }
@@ -110,13 +108,9 @@ struct SelectLocationView: View {
                     if searched == true {
                         Button (action: {
                             swiperTime.toggle()
-                            print("button clicked")
                             if let firstItem = results.first {
-                                print("past first param")
-                                print("\(firstItem.placemark.coordinate.latitude)")
                                     selectedLongitude = firstItem.placemark.coordinate.longitude
                                     selectedLatitude = firstItem.placemark.coordinate.latitude
-                                    print("Longitude: \(selectedLongitude)")
                             }
                             presentationMode.wrappedValue.dismiss()
                             showTitle = true
@@ -159,8 +153,6 @@ struct SelectLocationView: View {
                         cameraPosition = .region(resultRegion)
                         selectedLatitude = firstItem.placemark.coordinate.latitude
                         selectedLongitude = firstItem.placemark.coordinate.longitude
-                        print("Latitude: \(firstItem.placemark.coordinate.latitude)")
-                        print("Longitude: \(firstItem.placemark.coordinate.longitude)")
                         
                     }
                 }

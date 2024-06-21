@@ -25,7 +25,7 @@ struct FilterView: View {
     @State private var usingPersonalLocation = false
     
     @State private var isEditing = false
-    @State private var isOpen = true
+    @State private var isOpen = false
     @State private var userMood = ""
     @State private var isSwiperViewActive = false
     
@@ -60,14 +60,10 @@ struct FilterView: View {
         NavigationStack {
             ZStack {
                 LinearGradient(gradient: Gradient(colors:[Color.uncBlue, Color.darkerblue]), startPoint: UnitPoint(x: 0.5, y: 0.5), endPoint: .bottom)
-//                Color.uncBlue
-//                GeometryReader { geometry in
+
                     HStack {
                         Spacer()
                         VStack(spacing: getSpacing(for: geometry.size)) {
-                            //spacing should be 35 for big phones
-                            
-                            //add the ability to set location
                             HStack {
                                 UserLocationBtn(locationManager: locationManager, latitude: $latitude, longitude: $longitude, usingPersonalLocation: $usingPersonalLocation, selectLocationPressed: $selectLocationPressed, useMyLocationPressed: $useMyLocationPressed, locationPressed: $locationPressed)
                                 
@@ -76,7 +72,6 @@ struct FilterView: View {
                                     .font(.title3)
                                     .fontWeight(.bold)
                                     .shadow(color:.gray, radius: 5)
-                                //                            .italic()
                                 
                                 SelectLocationBtn(usingPersonalLocation: $usingPersonalLocation, mapView: $mapView, selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude, selectLocationPressed: $selectLocationPressed, useMyLocationPressed: $useMyLocationPressed, showTitle: $showTitle, selectedTab: $selectedTab, locationPressed: $locationPressed)
                                 
@@ -133,17 +128,14 @@ struct FilterView: View {
                                 .background(.white)
                                 .cornerRadius(20)
                                 .shadow(radius: 2)
+                                .submitLabel(.done)
                             //get whether they want it to be open
                             Toggle("Only open restaurants?", isOn: $isOpen)
                                 .frame(width: 331)
-                            //                        .padding(.horizontal, 34)
                                 .font(.title2)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
-                            //                        .shadow(color:.gray, radius: 5)
                                 .tint(Color.uncBlue)
-                            //                        .padding(.bottom, 20)
-                            
                             
                             
                             //submit button that takes you to SwiperView()
@@ -153,7 +145,6 @@ struct FilterView: View {
                         }
                         .padding(.top, 91)
                         Spacer()
-//                    }
                     
                 }
                 
@@ -161,6 +152,12 @@ struct FilterView: View {
                 .overlay {
                     if (instructionsClicked) {
                         Color.black.opacity(0.3).edgesIgnoringSafeArea(.all)
+                            .gesture(
+                                TapGesture()
+                                    .onEnded { _ in
+                                        instructionsClicked = false
+                                    }
+                            )
                         InstructionsView(selectedTab: $selectedTab)
                             .padding(6)
                             .multilineTextAlignment(.leading)
@@ -208,7 +205,6 @@ struct FilterView: View {
                             .fontWeight(.bold)
                             .foregroundColor(.darkerblue)
                         Spacer()
-                        //                        .italic()
                         Button {
                             instructionsClicked = true
                         }label: {
@@ -231,9 +227,13 @@ struct FilterView: View {
                     }
                     Spacer()
                 }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    .onTapGesture {
+                        instructionsClicked = false
+                    }
             }
             }
         }.preferredColorScheme(.light)
+            
         
         
     }
@@ -243,12 +243,9 @@ struct FilterView: View {
 
 
 
-//#Preview {
-//    FilterView(latitude: 40.7128, longitude: -74.0060, vm: RestaurantListViewModel(), locationManager: LocationManager())
-//}
+
 
 func getSpacing(for size: CGSize) -> CGFloat {
-//    return size.width > 400 ? 35 : 25
     if size.height > 711 {
         return 35
     } else if size.height > 700 {
@@ -257,17 +254,6 @@ func getSpacing(for size: CGSize) -> CGFloat {
         return 20
     }
 }
-
-/*
- 14pro, 15pro, 15: 710 --> -45
- 15proMax, 15plus, 14proMax: 790 --> -45
- 14plus, 13proMax, 12proMax: 796 --> -48
- 12, 12pro, 13, 13pro, 14: 714 --> -48
- 13mini, 12mini: 679 --> -48
- SE: 578 --> -48
- XR, 11: 765 --> -48
- 11pro, X, XS: 685--> -48
- */
 
 func getInstructionsOffset(for size: CGSize) -> CGFloat {
     if size.height > 930 {
@@ -291,56 +277,47 @@ struct PricesFilter: View {
         HStack(spacing: 2) {
             Button {
                 updatePrice(1)
-                print("\(prices)")
                 
             } label: {
                 Text("$")
                     .frame(width: 82, height: 70)
                         .tint(prices.contains(1) ? Color.white : Color.darkerblue)
                         .background(prices.contains(1) ? Color.darkerblue : Color.white)
-//                        .border(.black)
                         .clipShape(RoundedRectangle(cornerRadius: 15))
             }
             Button {
                 updatePrice(2)
-                print("\(prices)")
                 
             } label: {
                 Text("$$")
                     .frame(width: 82, height: 70)
                         .tint(prices.contains(2) ? Color.white : Color.darkerblue)
                         .background(prices.contains(2) ? Color.darkerblue : Color.white)
-//                        .border(.black)
                         .clipShape(RoundedRectangle(cornerRadius: 15))
             }
             Button {
                 updatePrice(3)
-                print("\(prices)")
                 
             } label: {
                 Text("$$$")
                     .frame(width: 82, height: 70)
                         .tint(prices.contains(3) ? Color.white : Color.darkerblue)
                         .background(prices.contains(3) ? Color.darkerblue : Color.white)
-//                        .border(.black)
                         .clipShape(RoundedRectangle(cornerRadius: 15))
             }
             Button {
                 updatePrice(4)
-                print("\(prices)")
                 
             } label: {
                 Text("$$$$")
                     .frame(width: 82, height: 70)
                         .tint(prices.contains(4) ? Color.white : Color.darkerblue)
                         .background(prices.contains(4) ? Color.darkerblue : Color.white)
-//                        .border(.black)
                         .clipShape(RoundedRectangle(cornerRadius: 15))
             }
         }
         .font(.title2)
         .fontWeight(.medium)
-//        .padding(.bottom, 20)
     }
     func updatePrice(_ price: Int) {
             if prices.contains(price) {
@@ -348,7 +325,6 @@ struct PricesFilter: View {
             } else {
                 prices.append(price)
             }
-            print(prices)
         }
 }
 
@@ -401,7 +377,6 @@ struct SelectLocationBtn: View {
                 Text("SELECT")
                 Text("LOCATION")
             }.font(.headline)
-//                .italic()
                 .foregroundColor(selectLocationPressed ? Color.white : Color.darkerblue)
                 .padding()
                     .foregroundColor(.black)
@@ -409,11 +384,6 @@ struct SelectLocationBtn: View {
                     .background(
                         RoundedRectangle(cornerRadius: 40)
                             .fill(selectLocationPressed ? Color.darkerblue : Color.white)
-//                            .overlay(
-//                                RoundedRectangle(cornerRadius: 40)
-//                                    .stroke(Color.black, lineWidth: 1)
-//                            )
-                        
                     ).navigationDestination(isPresented: $mapView) {
                         SelectLocationView(selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude, showTitle: $showTitle, selectedTab: $selectedTab, locationPressed: $locationPressed).toolbar(.hidden)
                     }
@@ -441,14 +411,11 @@ struct UserLocationBtn: View {
                 if let location = locationManager.userLocation {
                     latitude = location.coordinate.latitude
                     longitude = location.coordinate.longitude
-                    print("got latitude and longitude")
-                    print("Latitude: \(latitude)\nLongitude: \(longitude)")
                     usingPersonalLocation = true
                     
                 }
                 else {
-                    //might wanna ask for location again here
-                    print("User location not available")
+//                    print("User location not available")
                 }
             }
             selectLocationPressed = false
@@ -459,7 +426,6 @@ struct UserLocationBtn: View {
                 Text("CURRENT")
                 Text("LOCATION")
             }.font(.headline)
-//                .italic()
                 .foregroundColor(useMyLocationPressed ? Color.white : Color.darkerblue)
                 .padding()
                     .foregroundColor(.black)
@@ -467,10 +433,6 @@ struct UserLocationBtn: View {
                     .background(
                         RoundedRectangle(cornerRadius: 40)
                             .fill(useMyLocationPressed ? Color.darkerblue : Color.white)
-//                            .overlay(
-//                                RoundedRectangle(cornerRadius: 40)
-//                                    .stroke(Color.black, lineWidth: 1)
-//                            )
                         
                     )
             
@@ -529,11 +491,8 @@ struct SubmitBtn: View {
                 vm.prices = prices
                 animationCount = 0
                 if usingPersonalLocation == true {
-                    print("restaurants before getPlaces: \(restaurants)")
                     Task {
                         restaurants = await vm.getPlaces(with: userMood, longitude: longitude, latitude: latitude, radius: radius, openNow: isOpen, prices: prices, limit: limit)
-                        print("restaurants after getPlaces: \(restaurants) + isSwiperViewActice: \(isSwiperViewActive)")
-                        print("after set to true: \(isSwiperViewActive) + restaurants: \(restaurants)")
                         searching = false
                     }
                     
@@ -545,37 +504,28 @@ struct SubmitBtn: View {
                     }
                 }
                 else {
-                    print("Location not available")
                     searching = false
                 }
                 isSwiperViewActive = true
-                print("filters count: \(restaurants.count)")
                 selectedTab = "2"
             }
         }, label: {
             Text("SUBMIT")
                 .font(.title2)
                 .fontWeight(.medium)
-//                .italic()
                 .foregroundColor(.black)
                 .frame(width: 150, height: 50)
                 .background(
                     RoundedRectangle(cornerRadius: 40)
                         .fill(Color.white)
-//                        .overlay(
-//                            RoundedRectangle(cornerRadius: 40)
-//                                .stroke(Color.black, lineWidth: 1)
-//                        )
+
                     
                 )
-//                .padding(.bottom, 20)
         }).alert("Select a location", isPresented: $showAlert) {
             Button("OK", role: .cancel) { }
         }.alert("Select your price range", isPresented: $pricesAlert) {
             Button("OK", role: .cancel) { }
         }
-//        .navigationDestination(isPresented: $isSwiperViewActive) {
-//            SwiperView(vm: vm, selectedTab: $selectedTab, savedRestaurant: $savedRestaurant, restaurants: $restaurants)
-//        }
+
     }
 }

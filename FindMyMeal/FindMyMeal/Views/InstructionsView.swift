@@ -71,6 +71,3 @@ struct InstructionsView: View {
     }
 }
 
-//#Preview {
-//    InstructionsView()
-//}

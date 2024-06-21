@@ -37,12 +37,15 @@ struct FavoritesView: View {
     var paginatedItems: [DataItem] {
             let startIndex = (currentPage - 1) * itemsPerPage
             let endIndex = min(startIndex + itemsPerPage, filteredItems.count)
-            return Array(filteredItems[startIndex..<endIndex])
+            if startIndex < endIndex && startIndex < filteredItems.count {
+                return Array(filteredItems[startIndex..<endIndex])
+            } else {
+                return []
+            }
         }
     
     var body: some View {
         ZStack {
-//            Color.uncBlue
             LinearGradient(gradient: Gradient(colors:[Color.uncBlue, Color.darkerblue]), startPoint: UnitPoint(x: 0.5, y: 0.5), endPoint: .bottom)
             GeometryReader { geometry in
                 VStack {
@@ -62,7 +65,6 @@ struct FavoritesView: View {
                             Text("Favorites")
                                 .font(.largeTitle)
                                 .fontWeight(.bold)
-                            //                            .italic()
                                 .foregroundStyle(.darkerblue)
                             Spacer()
                             Button {
@@ -81,6 +83,7 @@ struct FavoritesView: View {
                                 .foregroundStyle(.white)
                         }
                         TextField("Search by restaurant name or city", text: $searchTerm)
+                            .submitLabel(.done)
                             .font(.subheadline)
                             .padding(12)
                             .background(.white)
@@ -99,8 +102,6 @@ struct FavoritesView: View {
                                         .frame(width: 20, height: 20)
                                         .foregroundStyle(.gray)
                                         .padding(.trailing, 25)
-                                }.onTapGesture {
-                                    //swipe down keyboard
                                 }
                             }
                         List() {
@@ -128,10 +129,6 @@ struct FavoritesView: View {
                             .onDelete { indexes in
                                 for index in indexes {
                                     deleteItem(paginatedItems[index])
-                                    //                                print("index: \(index)")
-                                    //                                print("new index: \(items.count) - \(index) - 1")
-                                    //                                deleteItem(items[items.count - index - 1])
-                                    //                                updateTrigger.toggle()
                                 }
                             }
                         }
@@ -154,7 +151,7 @@ struct FavoritesView: View {
                             }
                             Text("\(currentPage) of \((filteredItems.count + itemsPerPage - 1) / itemsPerPage)")
                             Button {
-                                if ((currentPage * itemsPerPage) < items.count) {
+                                if ((currentPage * itemsPerPage) < filteredItems.count) {
                                     currentPage += 1
                                 }
                             } label: {
@@ -167,11 +164,6 @@ struct FavoritesView: View {
                             }
                         }.foregroundStyle(Color.white)
                             .padding(.bottom, 30)
-                        //                        .background {
-                        //                            Rectangle()
-                        //                                .frame(width: 500, height: 100)
-                        //                                .foregroundStyle((LinearGradient(gradient: Gradient(colors:[Color.uncBlue, Color.darkerblue]), startPoint: UnitPoint(x: 0.5, y: -6.0), endPoint: .bottom)))
-                        //                        }
                     } else {
                         HStack {
                             Button {
@@ -188,7 +180,6 @@ struct FavoritesView: View {
                             Text("Favorites")
                                 .font(.largeTitle)
                                 .fontWeight(.bold)
-                            //                            .italic()
                                 .foregroundStyle(.darkerblue)
                             Spacer()
                             Button {
@@ -214,7 +205,6 @@ struct FavoritesView: View {
                             .font(.title2)
                             .fontWeight(.bold)
                             .padding(.trailing, 10)
-                        //                            .shadow(color:.gray, radius: 5)
                         
                         Spacer()
                     }
@@ -222,6 +212,9 @@ struct FavoritesView: View {
                 }.overlay {
                     if (instructionsClicked) {
                         Color.black.opacity(0.3).ignoresSafeArea()
+                            .onTapGesture {
+                                instructionsClicked = false
+                            }
                         InstructionsView(selectedTab: $selectedTab)
                             .padding(6)
                             .multilineTextAlignment(.leading)
@@ -326,7 +319,6 @@ struct FavoritesView: View {
                                                 .resizable()
                                                 .scaledToFit()
                                                 .frame(width: 18, height: 18)
-//                                                .foregroundStyle(Color.yelpRed)
                                                 .fontWeight(.semibold)
                                                 .font(.footnote)
                                                 .padding(.trailing, 85)
@@ -471,7 +463,6 @@ struct FavoritesView: View {
                             do {
                                 try context.save()
                             } catch {
-                                print("rip")
                             }
                             openEditor = false
                         } label: {
@@ -550,9 +541,7 @@ struct FavoritesView: View {
                 )
                 
                 if items.contains(where: { $0.id == item.id }) {
-                    print("Already contains this restaurant")
                 } else {
-                    print("Added \(item.id)")
                     context.insert(item)
                 }
             }
@@ -560,14 +549,10 @@ struct FavoritesView: View {
     
     func deleteItem(_ item: DataItem) {
         context.delete(item)
-        print("deleted \(item.name)")
         do {
             try context.save()
-            print("saved")
             updateTrigger.toggle()
-            print("trigger toggle")
             } catch {
-                print("Failed to save context: \(error)")
             }
     }
 }

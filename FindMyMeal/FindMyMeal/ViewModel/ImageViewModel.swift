@@ -13,7 +13,6 @@ class ImageViewModel: ObservableObject {
 
     private static var imageCache: NSCache<NSString, UIImage> = {
             let cache = NSCache<NSString, UIImage>()
-            // Optional: Configure cache settings if needed
             return cache
         }()
     
@@ -37,12 +36,12 @@ class ImageViewModel: ObservableObject {
 
         URLSession.shared.dataTask(with: url) { data, response, error in
             guard error == nil else {
-                print(error ?? "unknown error")
+//                print(error ?? "unknown error")
                 return
             }
 
             guard let data = data else {
-                print("No data found")
+//                print("No data found")
                 return
             }
 

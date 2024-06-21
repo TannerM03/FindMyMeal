@@ -43,15 +43,12 @@ class RestaurantListViewModel: ObservableObject {
             DispatchQueue.main.async {
                 self.restaurants = fetchedRestaurants
                 self.isLoading = false
-                print("getRestaurants --> Latitude: \(latitude) Longitude: \(longitude) category: \(self.category) limit: \(self.limit) term: \(term) price: \(prices) radius: \(radius) isOpen: \(openNow)")
-                print("Fetched \(fetchedRestaurants.count) restaurants")
             }
             return fetchedRestaurants
         } catch {
             DispatchQueue.main.async {
                 self.errorMessage = error.localizedDescription
                 self.isLoading = false
-                print("Error fetching restaurants: \(error)")
             }
             return []
         }

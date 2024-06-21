@@ -45,7 +45,6 @@ struct SwiperView: View {
     var body: some View {
         ZStack {
             LinearGradient(gradient: Gradient(colors:[Color.uncBlue, Color.darkerblue]), startPoint: UnitPoint(x: 0.5, y: 0.5), endPoint: .bottom)
-//            Color.uncBlue
             VStack {
                 HStack {
                     Button {
@@ -64,7 +63,6 @@ struct SwiperView: View {
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(.darkerblue)
-//                        .italic()
                     Spacer()
                     Button {
                         instructionsClicked = true
@@ -122,16 +120,14 @@ struct SwiperView: View {
                     if restaurants.count == 1 {
                         VStack {
                             Spacer()
-                            //text that says winner
                             CardView(restaurant: restaurants[0])
                                 .rotationEffect(.degrees(rotationAngle))
                                 .offset(finalCardOffset)
                                 .onAppear {
-                                        // Animate the card sliding to the center and rotating
                                     if (animationCount < 1) {
                                         withAnimation(.easeInOut(duration: 0.5)) {
                                             finalCardOffset = .zero
-                                            rotationAngle += 720 // Rotate two full circles
+                                            rotationAngle += 720
                                         }
                                     }
 
@@ -140,7 +136,6 @@ struct SwiperView: View {
                                 savedRestaurant = restaurants[0]
                                 selectedTab = "3"
                                 didSubmit = true
-                                print("clicked favorites button")
                             }label: {
                                 Text("Click to add to favorites")
                                     .padding()
@@ -163,7 +158,6 @@ struct SwiperView: View {
                     }
                     
                     else {
-                        // current restaurant
                         Text("Swipe to Eliminate!")
                             .font(.title2)
                             .fontWeight(.bold)
@@ -181,21 +175,17 @@ struct SwiperView: View {
                                         offset = gesture.translation
                                     }
                                     .onEnded { value in
-                                        // Deletes if you swipe left
-                                        //                                    if value.translation.width < -100 || value.translation.width > 100{
-                                        //                                        // removes top restaurant
-                                        //                                        self.removeCurrentRestaurant()
-                                        //                                    }
+                                        // Deletes if you swipe
                                         SwipeCard(width: offset.width)
                                     }
                                 
-                            ).onAppear {
+                            )
+                            .onAppear {
                                 shimmerOffset = -UIScreen.main.bounds.width
                             }
                         if restaurants.count != 1 {
                             Text("VS")
                                 .font(.title)
-//                                .italic()
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
                                 .shadow(color:.gray, radius: 5)
@@ -213,11 +203,8 @@ struct SwiperView: View {
                                             offsetTwo = gesture.translation
                                         }
                                         .onEnded { value in
-                                            // Deletes if you swipe left
-                                            //                                        if value.translation.width < -100 || value.translation.width > 100 {
-                                            //                                            // removes top restaurant
-                                            //                                            self.removeSecondRestaurant()
-                                            //                                        }
+                                            // Deletes if you swipe
+
                                             SwipeSecondCard(width: offsetTwo.width)
                                         }
                                     
@@ -227,7 +214,6 @@ struct SwiperView: View {
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
                                 .padding(.top, 8)
-//                                .shadow(color:.gray, radius: 5)
                             Spacer()
                         }
                     }
@@ -235,6 +221,9 @@ struct SwiperView: View {
             }.overlay {
                 if (instructionsClicked) {
                     Color.black.opacity(0.3).edgesIgnoringSafeArea(.all)
+                        .onTapGesture {
+                            instructionsClicked = false
+                        }
                     InstructionsView(selectedTab: $selectedTab)
                         .padding(6)
                         .multilineTextAlignment(.leading)
@@ -261,11 +250,9 @@ struct SwiperView: View {
         }.onChange(of: vm.restaurants, initial: true) { oldRestaurants, newRestaurants in
             // Update restaurants when vm.restaurants changes
             if !newRestaurants.isEmpty {
-                print("this ran")
                 restaurants = newRestaurants
             }
         }.onAppear{
-            print("swiper count: \(restaurants.count)")
             if restaurants.count == 1 {
                 animationCount = animationCount + 1
             }
@@ -332,9 +319,6 @@ struct SwiperView: View {
             if topIndex >= restaurants.count {
                 topIndex = 0
             }
-//            if restaurants.count == 1 {
-//                winner = restaurants[0]
-//            }
         }
     }
     private func removeSecondRestaurant() {
@@ -352,15 +336,9 @@ struct SwiperView: View {
             if bottomIndex >= restaurants.count {
                 bottomIndex = 0
             }
-//            if restaurants.count == 1 {
-//                winner = restaurants[0]
-//            }
+
         }
     }
 
 }
 
-//
-//#Preview {
-//    SwiperView(vm: RestaurantListViewModel(), isNewSearch: true)
-//}

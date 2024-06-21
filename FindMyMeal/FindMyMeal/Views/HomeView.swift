@@ -72,7 +72,6 @@ struct BeginButton: View {
     
 
     var body: some View {
-//        NavigationStack {
         NavigationLink(destination: TabsView(selectedTab: $selectedTab, vm: vm, restaurants: $restaurants, isNewSearch: $isNewSearch, topIndex: $topIndex, bottomIndex: $bottomIndex, searching: $searching, didSubmit: $didSubmit, firstSearch: $firstSearch, animationCount: $animationCount).navigationBarBackButtonHidden(true)) {
                 Text("BEGIN")
                     .font(.title2)
@@ -82,16 +81,10 @@ struct BeginButton: View {
                     .background(
                         RoundedRectangle(cornerRadius: 40)
                             .fill(Color.white)
-//                            .overlay(
-//                                RoundedRectangle(cornerRadius: 40)
-//                                    .stroke(Color.black, lineWidth: 1)
-//                            )
-                        
                     )
             }
             
             
             .padding(.bottom, 50)
-//        }
     }
 }

@@ -10,10 +10,9 @@ import SwiftUI
 struct CardView: View {
     let restaurant: RestaurantViewModel
     @State private var offset = CGSize.zero
-//    var directionsLocation: String {
-//        let addressPieces = [restaurant.address1, restaurant.city].filter { (($0?.isEmpty) == nil) }
-//        return addressPieces.joined(seperator: "+")
-//    }
+    @State private var confirmDirections = false
+    @State private var confirmYelp = false
+
     
     
     var body: some View {
@@ -24,7 +23,6 @@ struct CardView: View {
                     .font(.title2)
                     .fontWeight(.medium)
                         .multilineTextAlignment(.center)
-//                        .italic()
                         .frame(width: 265)
                         .padding(.bottom, -2)
                         HStack {
@@ -48,8 +46,7 @@ struct CardView: View {
                 HStack {
                     VStack(alignment: .center) {
                         Button {
-                            let url = URL(string: "http://maps.apple.com/?address=\(String(describing: restaurant.address1))+\(restaurant.city)")
-                            UIApplication.shared.open(url!)
+                            confirmDirections = true
                             
                         } label: {
                             Text("    Directions")
@@ -81,11 +78,16 @@ struct CardView: View {
                                 )
                         }
                         .foregroundStyle(.black)
+                        .alert("Open Apple Maps?", isPresented: $confirmDirections) {
+                            Button("Cancel") { }
+                            Button("Go") {
+                                let url = URL(string: "http://maps.apple.com/?address=\(String(describing: restaurant.address1))+\(restaurant.city)")
+                                UIApplication.shared.open(url!)
+                            }
+                        }
 
                         Button {
-                            if let yelpUrl = URL(string: restaurant.url) {
-                                UIApplication.shared.open(yelpUrl)
-                            }
+                            confirmYelp = true
                         }label: {
                             Text("    See More")
                                 .frame(width: 110, height: 25)
@@ -117,7 +119,15 @@ struct CardView: View {
                                                 .foregroundStyle(.black)
                                         )
                                 )
+                        }.alert("Open Yelp?", isPresented: $confirmYelp) {
+                            Button("Cancel") { }
+                            Button("Go") {
+                                if let yelpUrl = URL(string: restaurant.url) {
+                                    UIApplication.shared.open(yelpUrl)
+                                }
+                            }
                         }
+                       
                     }.padding(.trailing, 10)
                     ImageView(urlString: restaurant.imageUrl)
                         .frame(width: 120, height: 100)
@@ -137,7 +147,6 @@ struct CardView: View {
 
             }
             .frame(width: 265, height: 190)
-//            .padding()
             .background(
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color.white)
@@ -146,14 +155,6 @@ struct CardView: View {
                     .frame(width: 275, height: 200)
                     .padding(.vertical, 20)
             )
-//            .offset(x: offset.width, y: offset.height * 0.4)
-//                .rotationEffect(.degrees(Double(offset.width / 40)))
-//                .gesture(DragGesture()
-//                    .onChanged { gesture in
-//                        offset = gesture.translation
-//                    })
-//            .padding()
-//            ShareLink(item: (URL(string: restaurant.url) ?? yelpHomePage)!)
         }
     }
 }
