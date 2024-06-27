@@ -399,28 +399,34 @@ struct UserLocationBtn: View {
     @Binding var selectLocationPressed: Bool
     @Binding var useMyLocationPressed: Bool
     @Binding var locationPressed: Bool
+    @State private var userLocationAlert = false
     var body: some View {
         Button {
-            Task {
-                locationManager.startFetchingCurrentLocation()
-                
-                //this gives it time to actually fetch the location before the if
-                //statement, not sure if this is best practice (probably not)
-                try await Task.sleep(nanoseconds: 0_050_000_000)
-                
-                if let location = locationManager.userLocation {
-                    latitude = location.coordinate.latitude
-                    longitude = location.coordinate.longitude
-                    usingPersonalLocation = true
+            if locationManager.authStatus == .denied {
+                userLocationAlert = true
+            } else {
+                userLocationAlert = false
+                Task {
+                    locationManager.startFetchingCurrentLocation()
                     
+                    //this gives it time to actually fetch the location before the if
+                    //statement, not sure if this is best practice (probably not)
+                    try await Task.sleep(nanoseconds: 0_050_000_000)
+                    
+                    if let location = locationManager.userLocation {
+                        latitude = location.coordinate.latitude
+                        longitude = location.coordinate.longitude
+                        usingPersonalLocation = true
+                        
+                    }
+                    else {
+                        //                    print("User location not available")
+                    }
                 }
-                else {
-//                    print("User location not available")
-                }
+                selectLocationPressed = false
+                useMyLocationPressed = true
+                locationPressed = true
             }
-            selectLocationPressed = false
-            useMyLocationPressed = true
-            locationPressed = true
         } label: {
             VStack {
                 Text("CURRENT")
@@ -436,6 +442,12 @@ struct UserLocationBtn: View {
                         
                     )
             
+        }.alert("Must allow location access to use personal location", isPresented: $userLocationAlert) {
+            Button("OK", role: .cancel) {
+                if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(appSettings)
+                }
+            }
         }
     }
 }

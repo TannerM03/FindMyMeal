@@ -13,7 +13,7 @@ struct ContentView: View {
     @StateObject var vm = RestaurantListViewModel()
     
     var body: some View {
-        if locationManager.hasLocationAccess {
+        if locationManager.hasLocationAccess || locationManager.authStatus == .denied {
             HomeView(selectedTab: $selectedTab)
 //            TabsView(selectedTab: $tab, vm: vm, restaurants: $restaurants)
         } else {

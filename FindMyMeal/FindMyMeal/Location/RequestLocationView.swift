@@ -35,7 +35,7 @@ struct RequestLocationAccessView: View {
                         locationManager.requestLocationAccess()
                     }
                 } label: {
-                    Text("Allow access")
+                    Text("Continue")
                 }
             }
         }
